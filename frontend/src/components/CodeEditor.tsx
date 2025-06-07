@@ -1,0 +1,94 @@
+import React from "react";
+import { useState, useRef } from "react";
+import * as monaco from "monaco-editor";
+import Editor from "@monaco-editor/react";
+import { editor as MonacoEditor } from "monaco-editor";
+import LanguageSelector from "./LanguageSelector";
+import languageTemplates from "./data/languageTemplates";
+
+type CodeEditorProps = {
+  editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  value: string;
+  onChange: (value: string) => void;
+};
+
+const CodeEditor = ({ editorRef, value, onChange }: CodeEditorProps) => {
+  const [currentLanguage, setCurrentLanguage] = useState("python");
+
+  /*Placeholders when switching languages, work in progress
+  const [placeholder, setPlaceholder] = useState<{
+    [key: string]: string;
+  }>({
+    python: languageTemplates["python"],
+    java: languageTemplates["java"],
+    c: languageTemplates["c"],
+    cpp: languageTemplates["cpp"],
+    javascript: languageTemplates["javascript"],
+  });*/
+
+  const handleSelectLanguage = (language: string) => {
+    setCurrentLanguage(language);
+  };
+
+  function handleEditorChange(
+    value: string | undefined,
+    ev: monaco.editor.IModelContentChangedEvent
+  ) {
+    if (value !== undefined) {
+      onChange(value);
+    }
+  }
+
+  function handleEditorDidMount(
+    editor: MonacoEditor.IStandaloneCodeEditor,
+    monacoInstance: typeof monaco
+  ) {
+    editorRef.current = editor;
+    monacoInstance.editor.defineTheme("no-border-highlight", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.lineHighlightBackground": "#f5f5f5",
+        "editor.lineHighlightBorder": "#00000000",
+      },
+    });
+    monacoInstance.editor.setTheme("no-border-highlight");
+  }
+
+  function handleEditorBeforeMount(monacoInstance: typeof monaco) {
+    console.log("beforeMount: the monaco instance:", monacoInstance);
+  }
+
+  function handleEditorValidation(markers: monaco.editor.IMarker[]) {
+    // model markers
+    // markers.forEach(marker => console.log('onValidate:', marker.message));
+  }
+
+  return (
+    <div className="editor-container h-full w-full">
+      <div className="mb-2">
+        <LanguageSelector onSelect={handleSelectLanguage} />
+      </div>
+      <Editor
+        height="100vh"
+        width="100vw"
+        defaultLanguage="python"
+        language={currentLanguage}
+        value={value}
+        onChange={handleEditorChange}
+        onMount={handleEditorDidMount}
+        beforeMount={handleEditorBeforeMount}
+        onValidate={handleEditorValidation}
+        options={{
+          minimap: { enabled: false },
+          wordWrap: "on",
+          renderLineHighlight: "line",
+          scrollBeyondLastLine: false,
+        }}
+      />
+    </div>
+  );
+};
+
+export default CodeEditor;
