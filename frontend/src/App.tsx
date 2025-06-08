@@ -15,6 +15,11 @@ function App() {
   */
   const [editorValue, setEditorValue] = useState("");
 
+  /*We might have to refactor selectedLanguage, since LanguageSelector is a child of CodeEditor, I had to lift the state twice
+  to get it to the top level so that I could pass the selected language to the Output component, it works but is a little messy
+  */
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
+
   return (
     <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
       <Header />
@@ -28,6 +33,9 @@ function App() {
                   editorRef={editorRef}
                   value={editorValue}
                   onChange={(newValue) => setEditorValue(newValue)}
+                  onSelectedLanguage={(language) =>
+                    setSelectedLanguage(language)
+                  }
                 />
               </div>
             </Panel>
@@ -35,7 +43,7 @@ function App() {
             <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
             <Panel defaultSize={30} minSize={20}>
               <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
-                <Output input={editorValue} />
+                <Output language={selectedLanguage} input={editorValue} />
               </div>
             </Panel>
           </PanelGroup>
