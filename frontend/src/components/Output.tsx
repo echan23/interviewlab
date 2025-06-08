@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
 
 const Output = ({ input }: { input: string }) => {
-  const runCode = async () => {};
+  const runCode = async () => {
+    const editorContent = input;
+    if (!editorContent) return;
+    try {
+    } catch (error) {}
+  };
 
   return (
     <div className="output-container flex flex-col h-full">
