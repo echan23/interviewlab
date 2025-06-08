@@ -4,15 +4,21 @@ import * as monaco from "monaco-editor";
 import Editor from "@monaco-editor/react";
 import { editor as MonacoEditor } from "monaco-editor";
 import LanguageSelector from "./LanguageSelector";
-import languageTemplates from "./data/languageTemplates";
+import languageTemplates from "../data/languageTemplates";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   value: string;
   onChange: (value: string) => void;
+  onSelectedLanguage: (value: string) => void;
 };
 
-const CodeEditor = ({ editorRef, value, onChange }: CodeEditorProps) => {
+const CodeEditor = ({
+  editorRef,
+  value,
+  onChange,
+  onSelectedLanguage,
+}: CodeEditorProps) => {
   const [currentLanguage, setCurrentLanguage] = useState("python");
 
   /*Placeholders when switching languages, work in progress
@@ -28,6 +34,7 @@ const CodeEditor = ({ editorRef, value, onChange }: CodeEditorProps) => {
 
   const handleSelectLanguage = (language: string) => {
     setCurrentLanguage(language);
+    onSelectedLanguage(language);
   };
 
   function handleEditorChange(

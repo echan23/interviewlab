@@ -1,17 +1,28 @@
+import { executeCode } from "@/api/piston";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-const Output = ({ input }: { input: string }) => {
+interface OutputProps {
+  language: string;
+  input: string;
+}
+
+const Output = ({ language, input }: OutputProps) => {
+  const [output, setOutput] = useState("");
   const runCode = async () => {
     const editorContent = input;
-    if (!editorContent) return;
     try {
-    } catch (error) {}
+      const response = await executeCode(language, editorContent);
+      setOutput(response.run.output || "No output");
+    } catch (error) {
+      setOutput("error running code");
+    }
   };
 
   return (
     <div className="output-container flex flex-col h-full">
       <div className="w-fit">
-        <Button variant="outline" className="mb-2">
+        <Button variant="outline" className="mb-2" onClick={runCode}>
           Run
         </Button>
       </div>
@@ -20,7 +31,7 @@ const Output = ({ input }: { input: string }) => {
         <span className="font-semibold">Output</span>
         <br />
         <br />
-        {input}
+        {output}
       </div>
     </div>
   );
