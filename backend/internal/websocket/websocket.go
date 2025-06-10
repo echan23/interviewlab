@@ -1,4 +1,4 @@
-package main
+package websocket
 
 import (
 	"encoding/json"
@@ -14,11 +14,12 @@ var upgrader = websocket.Upgrader{
 }
 
 type Message struct {
-	Type string `json:"type"`
-	Code string `json:"code"`
+	Type     string `json:"type"`
+	Code     string `json:"code"`
+	HintType string `json:"hintType"`
 }
 
-func handleWebSocket(client *openai.Client) http.HandlerFunc {
+func HandleWebSocket(client *openai.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
@@ -30,25 +31,30 @@ func handleWebSocket(client *openai.Client) http.HandlerFunc {
 		for {
 			_, msgData, err := conn.ReadMessage()
 			if err != nil {
-				log.Println("Read error:", err)
+				log.Println("WebSocket read error:", err)
 				break
 			}
 
 			var msg Message
 			if err := json.Unmarshal(msgData, &msg); err != nil {
-				log.Println("JSON error:", err)
+				log.Println("WebSocket JSON unmarshal error:", err)
 				continue
 			}
 
 			if msg.Type == "hint" {
-				hint, err := getGPTResponse(client, msg.Code)
+				log.Printf("Handling %s hint request...\n", msg.HintType)
+
+				hint, err := GetGPTResponse(client, msg.Code, msg.HintType)
 				if err != nil {
-					log.Println("GPT error:", err)
-					conn.WriteJSON(map[string]string{"error": "GPT failed"})
+					log.Println("GPT generation error:", err)
+					conn.WriteJSON(map[string]string{"error": "GPT failed to generate a response"})
 					continue
 				}
 
-				conn.WriteJSON(map[string]string{"hint": hint})
+				conn.WriteJSON(map[string]string{
+					"type": "hint",
+					"hint": hint,
+				})
 			}
 		}
 	}
