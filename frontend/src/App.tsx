@@ -5,6 +5,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Header from "./components/Header";
 import { useState, useRef } from "react";
 import * as monaco from "monaco-editor";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 function App() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -21,35 +22,37 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState("python");
 
   return (
-    <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
-      <Header />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
+        <Header />
 
-      <div className="code-section-container rounded-lg border border-gray-300 m-1 p-1">
-        <div className="flex-1">
-          <PanelGroup direction="horizontal">
-            <Panel defaultSize={70} minSize={20}>
-              <div className="h-full overflow-auto">
-                <CodeEditor
-                  editorRef={editorRef}
-                  value={editorValue}
-                  onChange={(newValue) => setEditorValue(newValue)}
-                  onSelectedLanguage={(language) =>
-                    setSelectedLanguage(language)
-                  }
-                />
-              </div>
-            </Panel>
-            {/* Resizable Divider */}
-            <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
-            <Panel defaultSize={30} minSize={20}>
-              <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
-                <Output language={selectedLanguage} input={editorValue} />
-              </div>
-            </Panel>
-          </PanelGroup>
+        <div className="code-section-container rounded-lg border border-gray-300 m-1 p-1">
+          <div className="flex-1">
+            <PanelGroup direction="horizontal">
+              <Panel defaultSize={70} minSize={20}>
+                <div className="h-full overflow-auto">
+                  <CodeEditor
+                    editorRef={editorRef}
+                    value={editorValue}
+                    onChange={(newValue) => setEditorValue(newValue)}
+                    onSelectedLanguage={(language) =>
+                      setSelectedLanguage(language)
+                    }
+                  />
+                </div>
+              </Panel>
+              {/* Resizable Divider */}
+              <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
+              <Panel defaultSize={30} minSize={20}>
+                <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
+                  <Output language={selectedLanguage} input={editorValue} />
+                </div>
+              </Panel>
+            </PanelGroup>
+          </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 
