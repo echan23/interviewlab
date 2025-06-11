@@ -1,8 +1,8 @@
-package main
+package websocket
 
-import(
-	"github.com/echan23/interviewlab/client"
-	"github.com/echan23/interviewlab/websocket"
+import (
+	"fmt"
+	"log"
 )
 
 type IRange struct {
@@ -19,8 +19,7 @@ type Edit struct{
 	text string
 }
 
-func HandleEdit(edit Edit, pool *Pool){
-	editRange := edit.editRange
+func HandleEdit(edit []Edit, pool *Pool){
 
 }
 
@@ -32,15 +31,15 @@ type Pool struct{
 	content []string 
 }
 
-func (p *Pool) broadcastEdit(edit Edit){
+func (p *Pool) broadcastEdit(edit []Edit){
 	for client := range p.clients{
-		client <- edit
+		client.send <- edit
 	}
 }
 
 func (p *Pool) addClient(client *Client){
-	log.println("New Client Connected", client.id)
-	pool.clients[client] = true
+	log.Println("New Client Connected", client.id)
+	p.clients[client] = true
 }
 
 func (p* Pool) removeClient(c *Client){
@@ -49,40 +48,35 @@ func (p* Pool) removeClient(c *Client){
 		delete(p.clients, c)
 	}
 	c.conn.Close()
-	log.Println("Client Disconnected", client.id)
+	log.Println("Client Disconnected", c.id)
 }
 
-func (p *Pool) handleEdit(edit Edit){
-	p.content[]
+func (p *Pool) handleEdit(edit []Edit){
 }
 
 func NewPool() *Pool {
 	return &Pool{
-		clients: make(map[*Client]bool)
-		broadcast: make(chan event.Edit),
-
+		clients: make(map[*Client]bool),
+		broadcast: make(chan []Edit),
 	}
 }
 
-
-func (p *Pool) serveWS(){
-	ws , err := Upgrade(c)
-	if err != nil{
-		log.Println("Websocket upgrade failed")
-	}
-
+//Starts the server's listeners for channels
+func (p *Pool) run() {
 	for{
 		select{
 			case client := <-p.register:
-				p.addClient(c)
+				p.addClient(client)
 				fmt.Printf("Client connected", client.id)
-			}
+			
 			case client := <-p.unregister:
-				p.removeClient(c)
+				p.removeClient(client)
 				fmt.Printf("Client disconnected", client.id)
-			}
-			case edit := p <-p.broadcast:		
+			
+			case edit := <-p.broadcast:		
 				p.handleEdit(edit)
 				fmt.Printf("Edit handled")
 				p.broadcastEdit(edit)
+		}
+	}
 }

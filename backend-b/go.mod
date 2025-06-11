@@ -1,8 +1,10 @@
-module github.com/echan23/interviewlab
+module github.com/echan23/interviewlab/backend-b
+
+replace github.com/echan23/interviewlab/backend-b => .
 
 replace github.com/echan/interviewlab/backend-b/internal/websocket/pool => ./internal/websocket/pool
-replace github.com/echan/interviewlab/backend-b/internal/websocket/client => ./internal/websocket/client
 
+replace github.com/echan/interviewlab/backend-b/internal/websocket/client => ./internal/websocket/client
 
 go 1.24.3
 

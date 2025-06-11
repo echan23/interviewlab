@@ -4,7 +4,7 @@ import * as monaco from "monaco-editor";
 import Editor from "@monaco-editor/react";
 import { editor as MonacoEditor } from "monaco-editor";
 import LanguageSelector from "./LanguageSelector";
-import languageTemplates from "../data/languageTemplates";
+import { handleEditorUpdate } from "@/api";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
@@ -61,6 +61,7 @@ const CodeEditor = ({
       },
     });
     monacoInstance.editor.setTheme("no-border-highlight");
+    handleEditorUpdate(editor);
   }
 
   function handleEditorBeforeMount(monacoInstance: typeof monaco) {

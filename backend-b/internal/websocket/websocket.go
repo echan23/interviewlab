@@ -15,11 +15,11 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-func Upgrade(c *gin.Context){
+func Upgrade(c *gin.Context) (*websocket.Conn, error){
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil{
 		log.Println("error while upgrading")
-		return
+		return nil, err
 	}
-	defer conn.Close()
+	return conn, nil
 }

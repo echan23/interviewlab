@@ -12,6 +12,7 @@ type Client struct{
 	id string
 	pool *Pool
 	conn *websocket.Conn
+	send chan []Edit
 }
 
 func generateID() string{
@@ -55,7 +56,7 @@ func (c *Client) writePump(){
 			log.Println("Error receiving broadcast")
 		}
 
-		if editOutput, ok := json.Marshal(output); ok{
+		if editOutput, ok := json.Marshal(output); ok != nil{
 			c.conn.WriteMessage(websocket.TextMessage, editOutput)
 		}
 	}
