@@ -66,7 +66,6 @@ func (p* Pool) removeClient(c *Client){
 }
 
 func (p *Pool) handleEdit(edits []Edit){
-	log.Println("handling edit")
 	p.Lock()
 	defer p.Unlock()
 	sort.Slice(edits, func(i, j int) bool{

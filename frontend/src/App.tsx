@@ -47,11 +47,6 @@ function App() {
     const socket = connect(handleReceiveEditorUpdate, handleReceiveEditorInit);
     socketRef.current = socket;
 
-    /*const editor = editorRef.current;
-    if (editor) {
-      handleEditorUpdate(editor);
-    }*/
-
     return () => {
       console.log("cleanup closing socket");
       disconnect();
@@ -70,6 +65,7 @@ function App() {
                 <CodeEditor
                   editorRef={editorRef}
                   value={editorValue}
+                  onValueChange={setEditorValue}
                   onSelectedLanguage={(language) =>
                     setSelectedLanguage(language)
                   }

@@ -14,7 +14,7 @@ type Init struct{
 
 //Init passes the current contents of the codefile to the client
 func (c *Client) InitClientContent(p *Pool){
-	log.Println("Sending editor content to client", p.content)
+	log.Println("Sending editor content to client: ", p.content)
 	initContent := Init{Type: "init", Content: p.content}
 	if err := c.conn.WriteJSON(initContent); err != nil{
 		log.Println("Error sending editor content to client")
