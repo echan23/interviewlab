@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CodeEditor from "./components/CodeEditor";
 import Output from "./components/Output";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Header from "./components/Header";
 import { useState, useRef } from "react";
 import * as monaco from "monaco-editor";
+import { handleEditorUpdate, updateEditorContent } from "./api/index.ts";
+import connect, { disconnect } from "./api/websocket.ts";
+import type { Edit, Init } from "./data/types.ts";
 
 function App() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -19,6 +22,41 @@ function App() {
   to get it to the top level so that I could pass the selected language to the Output component, it works but is a little messy
   */
   const [selectedLanguage, setSelectedLanguage] = useState("python");
+  const socketRef = useRef<WebSocket | null>(null);
+
+  //Handle updates to the editor
+  const handleReceiveEditorUpdate = (receivedEdits: Edit[]) => {
+    const editor = editorRef.current;
+    if (!editor) {
+      return;
+    }
+    updateEditorContent(editor, receivedEdits);
+  };
+  //Handles retrieval of codefile when the client joins
+  const handleReceiveEditorInit = (init: Init) => {
+    console.log("init editor content:", init.content);
+    setEditorValue(init.content);
+    const editor = editorRef.current;
+    if (!editor) {
+      return;
+    }
+    editor.setValue(init.content);
+  };
+
+  useEffect(() => {
+    const socket = connect(handleReceiveEditorUpdate, handleReceiveEditorInit);
+    socketRef.current = socket;
+
+    /*const editor = editorRef.current;
+    if (editor) {
+      handleEditorUpdate(editor);
+    }*/
+
+    return () => {
+      console.log("cleanup closing socket");
+      disconnect();
+    };
+  }, []);
 
   return (
     <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
@@ -32,7 +70,6 @@ function App() {
                 <CodeEditor
                   editorRef={editorRef}
                   value={editorValue}
-                  onChange={(newValue) => setEditorValue(newValue)}
                   onSelectedLanguage={(language) =>
                     setSelectedLanguage(language)
                   }

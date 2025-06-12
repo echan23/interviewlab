@@ -2,9 +2,9 @@ package websocket
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -12,11 +12,11 @@ type Client struct{
 	id string
 	pool *Pool
 	conn *websocket.Conn
-	send chan []Edit
+	receiveEdit chan []Edit
 }
 
 func generateID() string{
-	return ""
+	return uuid.NewString()
 }
 
 func NewClient(conn *websocket.Conn, pool *Pool) *Client {
@@ -24,40 +24,51 @@ func NewClient(conn *websocket.Conn, pool *Pool) *Client {
 		id: generateID(),
 		pool: pool,
 		conn: conn,
+		receiveEdit: make(chan []Edit),
 	}
 }
 
 func (c *Client) readPump() {
+	defer func() {
+        c.pool.unregister <- c
+        c.conn.Close()
+        log.Println("Client closed connection")
+    }()
 	for{
 		_, payload, err := c.conn.ReadMessage()
 		if err != nil{
-			log.Println("Error reading message")
+			log.Println("Error reading message: ", err)
 			return
 		}
-
-		var edit []Edit
-		if err := json.Unmarshal(payload, &edit); err != nil{
-			fmt.Println("Error:", err)
-			continue
+		log.Println("websocket received input: ", payload)
+		var edits []Edit
+		if err := json.Unmarshal(payload, &edits); err != nil{
+			log.Println("Error:", err)
+			return
 		}
-
-		c.pool.broadcast <- edit
+		log.Println("sending to broadcast")
+		c.pool.broadcast <- Broadcast{Sender: c.id, Message: edits}
 	}
 }
 
 func (c *Client) writePump(){
 	defer func(){
+		log.Println("Closing from write pump")
 		c.conn.Close()
 	}()
 
 	for{
-		output, ok := <- c.pool.broadcast
+		output, ok := <- c.receiveEdit
+		log.Println("Writepump output from broadcast:" , output)
 		if !ok{
 			log.Println("Error receiving broadcast")
+			return
 		}
 
-		if editOutput, ok := json.Marshal(output); ok != nil{
-			c.conn.WriteMessage(websocket.TextMessage, editOutput)
+		log.Println("Sending message:", output)
+		if err := c.conn.WriteJSON(output); err != nil{
+			log.Println("error writing message", err)
+			return
 		}
 	}
 }

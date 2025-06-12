@@ -9,14 +9,12 @@ import { handleEditorUpdate } from "@/api";
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   value: string;
-  onChange: (value: string) => void;
   onSelectedLanguage: (value: string) => void;
 };
 
 const CodeEditor = ({
   editorRef,
   value,
-  onChange,
   onSelectedLanguage,
 }: CodeEditorProps) => {
   const [currentLanguage, setCurrentLanguage] = useState("python");
@@ -37,15 +35,6 @@ const CodeEditor = ({
     onSelectedLanguage(language);
   };
 
-  function handleEditorChange(
-    value: string | undefined,
-    ev: monaco.editor.IModelContentChangedEvent
-  ) {
-    if (value !== undefined) {
-      onChange(value);
-    }
-  }
-
   function handleEditorDidMount(
     editor: MonacoEditor.IStandaloneCodeEditor,
     monacoInstance: typeof monaco
@@ -64,9 +53,7 @@ const CodeEditor = ({
     handleEditorUpdate(editor);
   }
 
-  function handleEditorBeforeMount(monacoInstance: typeof monaco) {
-    console.log("beforeMount: the monaco instance:", monacoInstance);
-  }
+  function handleEditorBeforeMount(monacoInstance: typeof monaco) {}
 
   function handleEditorValidation(markers: monaco.editor.IMarker[]) {
     // model markers
@@ -84,7 +71,6 @@ const CodeEditor = ({
         defaultLanguage="python"
         language={currentLanguage}
         value={value}
-        onChange={handleEditorChange}
         onMount={handleEditorDidMount}
         beforeMount={handleEditorBeforeMount}
         onValidate={handleEditorValidation}

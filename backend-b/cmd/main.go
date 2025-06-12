@@ -2,15 +2,27 @@ package main
 
 import (
 	"log"
-	"net/http"
 
-	"github.com/echan23/interviewlab/backend-b/internal/websocket/pool"
+	"github.com/echan23/interviewlab/backend-b/internal/websocket"
+	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	p := pool.NewPool()
-
-	go p.run()
-	log.Println("Server starting on port 8080")
-	http.ListenAndServe(":8080", nil)
+func hello(c *gin.Context) {
+	c.String(200, "Hello websocket!")
 }
+
+func main() {
+	p := websocket.NewPool()
+
+	go p.Run()
+
+	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.String(200, "Hello websocket!")
+	})
+	r.GET("/ws", p.ServeWS)
+
+	log.Println("Server starting on port 8080")
+	r.Run(":8080")
+}
+
