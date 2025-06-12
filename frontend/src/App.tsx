@@ -41,6 +41,11 @@ function App() {
       return;
     }
     editor.setValue(init.content);
+
+    /*Attach a listener for local updates, we attach this after we retrieve the codefile content, otherwise we would mistake
+    the initial retrieval for a local change, triggering the listener and sending the codefile content back to the server.
+    This would cause content on all current clients to be doubled everytime a new client joins*/
+    handleEditorUpdate(editor);
   };
 
   useEffect(() => {
@@ -65,7 +70,6 @@ function App() {
                 <CodeEditor
                   editorRef={editorRef}
                   value={editorValue}
-                  onValueChange={setEditorValue}
                   onSelectedLanguage={(language) =>
                     setSelectedLanguage(language)
                   }

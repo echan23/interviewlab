@@ -10,14 +10,12 @@ type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   value: string;
   onSelectedLanguage: (value: string) => void;
-  onValueChange: (value: string) => void;
 };
 
 const CodeEditor = ({
   editorRef,
   value,
   onSelectedLanguage,
-  onValueChange,
 }: CodeEditorProps) => {
   const [currentLanguage, setCurrentLanguage] = useState("python");
 
@@ -52,7 +50,6 @@ const CodeEditor = ({
       },
     });
     monacoInstance.editor.setTheme("no-border-highlight");
-    handleEditorUpdate(editor);
   }
 
   function handleEditorBeforeMount(monacoInstance: typeof monaco) {}
@@ -73,7 +70,6 @@ const CodeEditor = ({
         defaultLanguage="python"
         language={currentLanguage}
         value={value}
-        onChange={(value) => onValueChange(value ?? "")}
         onMount={handleEditorDidMount}
         beforeMount={handleEditorBeforeMount}
         onValidate={handleEditorValidation}
