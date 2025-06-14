@@ -11,7 +11,6 @@ import { useTheme } from "next-themes";
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   value: string;
-  onChange: (value: string) => void;
   onSelectedLanguage: (value: string) => void;
   setEditorMounted: (value: boolean) => void;
 };
@@ -29,15 +28,6 @@ const CodeEditor = ({
     setCurrentLanguage(language);
     onSelectedLanguage(language);
   };
-
-  function handleEditorChange(
-    value: string | undefined,
-    ev: monaco.editor.IModelContentChangedEvent
-  ) {
-    if (value !== undefined) {
-      onChange(value);
-    }
-  }
 
   function getResolvedTheme() {
     if (theme === "dark") return "vs-dark";
