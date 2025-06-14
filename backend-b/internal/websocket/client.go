@@ -10,7 +10,7 @@ import (
 
 type Client struct{
 	id string
-	pool *Pool
+	room *Room
 	conn *websocket.Conn
 	receiveEdit chan []Edit
 }
@@ -19,10 +19,10 @@ func generateID() string{
 	return uuid.NewString()
 }
 
-func NewClient(conn *websocket.Conn, pool *Pool) *Client {
+func NewClient(conn *websocket.Conn, room *Room) *Client {
 	return &Client{
 		id: generateID(),
-		pool: pool,
+		room: room,
 		conn: conn,
 		receiveEdit: make(chan []Edit),
 	}
@@ -30,7 +30,7 @@ func NewClient(conn *websocket.Conn, pool *Pool) *Client {
 
 func (c *Client) readPump() {
 	defer func() {
-        c.pool.unregister <- c
+        c.room.unregister <- c
         c.conn.Close()
         log.Println("Client closed connection")
     }()
@@ -47,7 +47,7 @@ func (c *Client) readPump() {
 			return
 		}
 		log.Println("sending to broadcast")
-		c.pool.broadcast <- Broadcast{Sender: c.id, Message: edits}
+		c.room.broadcast <- Broadcast{Sender: c.id, Message: edits}
 	}
 }
 

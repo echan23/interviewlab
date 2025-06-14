@@ -4,7 +4,9 @@ import type { Edit, Init } from "../data/types";
 
 let applyingRemote = false;
 
-const handleEditorUpdate = (editor: monaco.editor.IStandaloneCodeEditor) => {
+const handleEditorUpdateEvent = (
+  editor: monaco.editor.IStandaloneCodeEditor
+) => {
   console.log("attaching listener");
   const model = editor.getModel();
 
@@ -17,7 +19,7 @@ const handleEditorUpdate = (editor: monaco.editor.IStandaloneCodeEditor) => {
   });
 };
 
-const updateEditorContent = (
+const updateEditorContentEvent = (
   editor: monaco.editor.IStandaloneCodeEditor,
   edits: Edit[]
 ) => {
@@ -37,4 +39,4 @@ const updateEditorContent = (
   applyingRemote = false;
 };
 
-export { handleEditorUpdate, updateEditorContent };
+export { handleEditorUpdateEvent, updateEditorContentEvent };

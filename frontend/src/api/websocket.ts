@@ -1,12 +1,14 @@
 import * as monaco from "monaco-editor";
 import type { Edit, Init } from "../data/types.ts";
+import type { Params } from "react-router-dom";
 
 let socket: WebSocket;
 const connect = (
-  onReceiveUpdate: (update: Edit[]) => void, //Callback that handles editor updates
+  roomID: string,
+  onReceiveUpdate: (update: Edit[]) => void, //Callback that handles editor updates from other clients
   onReceiveInit: (update: Init) => void //Callback that initializes local editor with codefile content when joining
 ) => {
-  socket = new WebSocket("ws://localhost:8080/ws");
+  socket = new WebSocket(`ws://localhost:8080/ws/${roomID}`);
   socket.onopen = () => {
     console.log("socket opened successfully");
   };
@@ -22,8 +24,11 @@ const connect = (
     }
   };
 
-  socket.onclose = () => {
+  socket.onclose = (event) => {
     console.log("Socket connection closing");
+    if (event.code === 1006) {
+      alert("Could not join room — it may not exist.");
+    }
   };
 
   socket.onerror = (error) => {

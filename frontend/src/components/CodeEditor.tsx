@@ -4,18 +4,19 @@ import * as monaco from "monaco-editor";
 import Editor from "@monaco-editor/react";
 import { editor as MonacoEditor } from "monaco-editor";
 import LanguageSelector from "./LanguageSelector";
-import { handleEditorUpdate } from "@/api";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   value: string;
   onSelectedLanguage: (value: string) => void;
+  setEditorMounted(value: boolean): void;
 };
 
 const CodeEditor = ({
   editorRef,
   value,
   onSelectedLanguage,
+  setEditorMounted,
 }: CodeEditorProps) => {
   const [currentLanguage, setCurrentLanguage] = useState("python");
 
@@ -50,6 +51,7 @@ const CodeEditor = ({
       },
     });
     monacoInstance.editor.setTheme("no-border-highlight");
+    setEditorMounted(true); //Trigger flag that editor is mounted, allows frontend to begin conncecting
   }
 
   function handleEditorBeforeMount(monacoInstance: typeof monaco) {}
@@ -65,7 +67,7 @@ const CodeEditor = ({
         <LanguageSelector onSelect={handleSelectLanguage} />
       </div>
       <Editor
-        height="100vh"
+        height="84vh"
         width="100vw"
         defaultLanguage="python"
         language={currentLanguage}

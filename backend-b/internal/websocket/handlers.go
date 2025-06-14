@@ -13,9 +13,9 @@ type Init struct{
 }
 
 //Init passes the current contents of the codefile to the client
-func (c *Client) InitClientContent(p *Pool){
-	log.Println("Sending editor content to client: ", p.content)
-	initContent := Init{Type: "init", Content: p.content}
+func (c *Client) InitClientContent(r *Room){
+	log.Println("Sending editor content to client: ", r.content)
+	initContent := Init{Type: "init", Content: r.content}
 	if err := c.conn.WriteJSON(initContent); err != nil{
 		log.Println("Error sending editor content to client")
 		return
@@ -23,14 +23,13 @@ func (c *Client) InitClientContent(p *Pool){
 }
 
 //Handler for a http connection, this upgrades the http connection to a websocket then start goroutines for reading and writing
-func (p *Pool) ServeWS(c *gin.Context){
+func (p *Room) ServeWS(c *gin.Context){
 	log.Println("New ServeWS connection:", time.Now())
 	conn, err := Upgrade(c)
 	if err != nil{
 		log.Println("Websocket upgrade failed")
 		return
 	}
-
 	client := NewClient(conn, p)
 	client.InitClientContent(p)
 	p.register <- client
