@@ -1,6 +1,8 @@
 package main
 
 import (
+	"interviewlab-backend/config"
+	"interviewlab-backend/internal/redis"
 	"interviewlab-backend/internal/websocket"
 	"log"
 
@@ -43,6 +45,10 @@ func main() {
 
 	==============================================================================================*/
 	m := websocket.NewManager()
+	config.Init() //Sets the serverID
+
+	redis.InitRedisClient("localhost:6379", "", 0)
+
 	//Have a post method that handles creation of new Room
 	r.POST("/api/room/create", func(c *gin.Context){
 		log.Println("Generating new Room URL (main.go)")

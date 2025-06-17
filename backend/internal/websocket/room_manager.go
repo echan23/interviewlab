@@ -30,8 +30,8 @@ func (m *Manager) GetOrCreateRoom(roomID string) *Room{
 	if ok{
 		return m.rooms[roomID]
 	}
-	newRoom := NewRoom()
-	go newRoom.Run() //Check if this is the right spot to start the goroutine
+	newRoom := NewRoom(roomID)
+	go newRoom.Run(roomID) //Check if this is the right spot to start the goroutine
 	m.rooms[roomID] = newRoom
 	return newRoom
 }
@@ -64,6 +64,3 @@ Manager logic:
 
 	For now create a connect room button on the front end that returns a URL, use this to test the room connections
 */
-func (m *Manager) Run(){
-	
-}

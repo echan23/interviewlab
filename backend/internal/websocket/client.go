@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"encoding/json"
+	"interviewlab-backend/internal/types"
 	"log"
 
 	"github.com/google/uuid"
@@ -12,7 +13,7 @@ type Client struct{
 	id string
 	room *Room
 	conn *websocket.Conn
-	receiveEdit chan []Edit
+	receiveEdit chan []types.Edit
 }
 
 func generateID() string{
@@ -24,7 +25,7 @@ func NewClient(conn *websocket.Conn, room *Room) *Client {
 		id: generateID(),
 		room: room,
 		conn: conn,
-		receiveEdit: make(chan []Edit),
+		receiveEdit: make(chan []types.Edit),
 	}
 }
 
@@ -41,13 +42,14 @@ func (c *Client) readPump() {
 			return
 		}
 		log.Println("websocket received input: ", payload)
-		var edits []Edit
+		var edits []types.Edit
 		if err := json.Unmarshal(payload, &edits); err != nil{
 			log.Println("Error:", err)
 			return
 		}
-		log.Println("sending to broadcast")
-		c.room.broadcast <- Broadcast{Sender: c.id, Message: edits}
+		log.Println("sending diffs to redis")
+		c.room.broadcast <- types.Broadcast{Sender: c.id, Message: edits}
+		c.room.publishQueue <- edits
 	}
 }
 
