@@ -4,6 +4,7 @@ import (
 	"interviewlab-backend/config"
 	"interviewlab-backend/internal/redis"
 	"interviewlab-backend/internal/websocket"
+	"interviewlab-backend/postgres"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -46,6 +47,8 @@ func main() {
 	==============================================================================================*/
 	m := websocket.NewManager()
 	config.Init() //Sets the serverID
+	postgres.Init() //starts postgres connection
+	defer postgres.DB.Close()
 
 	redis.InitRedisClient("localhost:6379", "", 0)
 

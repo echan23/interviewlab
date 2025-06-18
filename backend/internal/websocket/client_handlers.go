@@ -35,7 +35,7 @@ func (r *Room) ServeWS(c *gin.Context){
 		return
 	}
 	client := NewClient(conn, r)
-	initContent := redis.SyncRoomFromRedis(r.Id) //This is where we are pulling from the hash rather than reading the room's local value
+	initContent, _ := redis.SyncContentFromRedis(r.Id) //This is where we are pulling from the hash rather than reading the room's local value
 	log.Println("initContent: ", initContent)
 	client.InitClientContent(initContent)
 	r.register <- client

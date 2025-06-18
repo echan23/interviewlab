@@ -6,6 +6,7 @@ import (
 	"interviewlab-backend/config"
 	"interviewlab-backend/internal/redis"
 	"interviewlab-backend/internal/types"
+	"interviewlab-backend/postgres"
 	"log"
 	"sort"
 	"sync"
@@ -30,6 +31,7 @@ type Room struct{
 	hashWriteInterval time.Duration
 	writeInProgress bool
 	flushedChannel chan struct{}
+	dbWriteInterval time.Duration
 }
 
 /*We pass broadcast instead of just a message because we ned to track senderid so that clients don't re-receive their own edits. 
@@ -61,8 +63,13 @@ func (r *Room) removeClient(c *Client){
 	log.Println("Client Disconnected", c.id)
 }
 
+func (r *Room) scheduleShutdown(){
+	select{
+
+	}
+}
+
 func (r *Room) handleEdit(edits []types.Edit){
-	log.Println("handling edit")
 	r.Lock()
 	defer r.Unlock()
 	sort.Slice(edits, func(i, j int) bool{
@@ -85,6 +92,10 @@ func (r *Room) handleEdit(edits []types.Edit){
 
 func NewRoom(roomID string) *Room {
 	ctx, cancel := context.WithCancel(context.Background())
+	content, err := redis.SyncContentFromRedis(roomID)
+	if err != nil{
+		log.Println("Error retrieving room content, setting content as none")
+	}
 	return &Room{
 		Id: roomID,
 		clients: make(map[*Client]bool),
@@ -96,8 +107,9 @@ func NewRoom(roomID string) *Room {
 		publishInterval: 200 * time.Millisecond,
 		Ctx: ctx,
 		Cancel: cancel,
-		content: redis.SyncRoomFromRedis(roomID),
+		content: content,
 		hashWriteInterval: 2 * time.Second,
+		dbWriteInterval: 10 * time.Second,
 	}
 }
 
@@ -159,6 +171,23 @@ func (r *Room) startHashWriteRoutine(){
 	}
 }
 
+func (r *Room) startDBWriteRoutine(){
+	ticker := time.NewTicker(r.dbWriteInterval)
+	defer ticker.Stop()
+	for{
+		select{
+			case <- r.Ctx.Done():
+				return
+			case <- ticker.C:
+				err := postgres.SaveToDB(r.Ctx, r.Id, r.content, time.Now())
+				if err != nil{
+					log.Println("Error saving to db:", r.Id, err)
+				} else{
+					log.Println("Room saved to db:", r.Id)
+				}
+		}
+	}
+}
 
 //Starts the server's listeners for channels
 func (r *Room) Run(roomID string) {
@@ -166,6 +195,7 @@ func (r *Room) Run(roomID string) {
 	go redis.SubscribeDiffs(r.Ctx, roomID, r.handleIncomingDiff)
 	go r.startPublishBatcher()
 	go r.startHashWriteRoutine()
+	go r.startDBWriteRoutine()
 	for{
 		select{
 			case <-r.Ctx.Done():

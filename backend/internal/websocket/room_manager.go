@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"interviewlab-backend/internal/redis"
 	"log"
 	"sync"
 
@@ -26,13 +27,22 @@ func (m *Manager) generateRoomID() string{
 }
 
 func (m *Manager) GetOrCreateRoom(roomID string) *Room{
+	m.Lock()
 	_, ok := m.rooms[roomID]
+	m.Unlock()
 	if ok{
 		return m.rooms[roomID]
 	}
 	newRoom := NewRoom(roomID)
+	prevContent, err := redis.SyncContentFromRedis(roomID)
+	if err == redis.ErrRoomNotFound{
+		redis.SaveRoomToRedis(roomID, "")
+	}
+	newRoom.content = prevContent	
 	go newRoom.Run(roomID) //Check if this is the right spot to start the goroutine
+	m.Lock()
 	m.rooms[roomID] = newRoom
+	m.Unlock()
 	return newRoom
 }
 

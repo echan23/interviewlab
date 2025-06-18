@@ -41,13 +41,13 @@ func (c *Client) readPump() {
 			log.Println("Error reading message: ", err)
 			return
 		}
-		log.Println("websocket received input: ", payload)
+		//log.Println("websocket received input: ", payload)
 		var edits []types.Edit
 		if err := json.Unmarshal(payload, &edits); err != nil{
 			log.Println("Error:", err)
 			return
 		}
-		log.Println("sending diffs to redis")
+		//log.Println("sending diffs to redis")
 		c.room.broadcast <- types.Broadcast{Sender: c.id, Message: edits}
 		c.room.publishQueue <- edits
 	}

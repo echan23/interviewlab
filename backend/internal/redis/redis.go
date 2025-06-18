@@ -3,8 +3,10 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"interviewlab-backend/config"
 	"interviewlab-backend/internal/types"
+	"interviewlab-backend/postgres"
 	"log"
 	"time"
 
@@ -26,11 +28,11 @@ func InitRedisClient(addr string, password string, db int){
 	})
 }
 
+//Hash is unnecessary but leave as a hash in case more fields get added
 func SaveRoomToRedis(roomID string, contentString string){
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	err := client.HSet(ctx, roomID, map[string]interface{}{
-		"roomID": roomID,
 		"content": contentString,
 	}).Err()
 	if err != nil{
@@ -40,20 +42,25 @@ func SaveRoomToRedis(roomID string, contentString string){
 	log.Println("Saving room hash in redis")
 }
 
-func SyncRoomFromRedis(roomID string) (string){
+var ErrRoomNotFound = errors.New("room not found in redis")
+
+func SyncContentFromRedis(roomID string) (string, error){
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	content, err := client.HGet(ctx, roomID, "content").Result()
+	if err == nil{
+		return content, nil
+	}
 	if err == redis.Nil{
-		//Implement logic to query DB
-		return ""
+		log.Println("Room doesn't exist in redis: ", roomID)
+		content, dbErr := postgres.RetrieveContent(ctx, roomID)
+		if dbErr == nil{
+			log.Println("Room retrieved from Postgres: ", roomID)
+			return content, nil
+		}
+		log.Println("Content not found in postgres")
 	}
-	if err != nil{
-		log.Println("error retrieving content from redis")
-		return ""
-	}
-	log.Println("Retrieving room content from redis")
-	return content
+	return "", ErrRoomNotFound
 }
 
 func SyncContentToRedis(roomID string, contentString string){
@@ -64,7 +71,6 @@ func SyncContentToRedis(roomID string, contentString string){
 		log.Println("error syncing diffs to redis for room: ", roomID, err)
 		return
 	}
-	log.Println("Sending room content to redis")
 }
 
 func SubscribeDiffs(ctx context.Context, roomID string, handleIncomingDiff func([]types.Edit)){
