@@ -1,33 +1,23 @@
+import { Moon, Sun } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
 import { useTheme } from "@/components/ThemeProvider"
-import { Sun, Moon, Laptop } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()
 
+  const isDark = theme === "dark"
+
   return (
-    <div className="flex gap-1 ml-2">
-      <Button
-        variant={theme === "light" ? "default" : "outline"}
-        size="sm"
-        onClick={() => setTheme("light")}
+    <div className="flex items-center space-x-2">
+      <Switch
+        checked={isDark}
+        onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+        className="relative w-12 h-6 bg-muted rounded-full transition-colors border border-border"
       >
-        <Sun className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={theme === "dark" ? "default" : "outline"}
-        size="sm"
-        onClick={() => setTheme("dark")}
-      >
-        <Moon className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={theme === "system" ? "default" : "outline"}
-        size="sm"
-        onClick={() => setTheme("system")}
-      >
-        <Laptop className="h-4 w-4" />
-      </Button>
+      <Sun className="absolute left-1 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500 pointer-events-none" />
+      <Moon className="absolute right-1 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 dark:text-slate-300 pointer-events-none" />
+
+      </Switch>
     </div>
   )
 }
