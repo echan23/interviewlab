@@ -7,6 +7,7 @@ import languageTemplates from "../data/languageTemplates"
 import ThemeToggle from "./ThemeToggle"
 import DifficultySelector from "./DifficultySelector";
 import { useTheme } from "./ThemeProvider"
+import HintButtons from "./HintButtons"
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>
@@ -64,6 +65,7 @@ const CodeEditor = ({
       <div className="mb-2 flex justify-between items-center">
         <LanguageSelector onSelect={handleSelectLanguage} />
         <div className="flex items-center gap-4">
+          <HintButtons />
           <DifficultySelector value={difficulty} onChange={setDifficulty} />
           <ThemeToggle />
         </div>
