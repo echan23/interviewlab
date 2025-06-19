@@ -40,9 +40,7 @@ const CodeEditor = ({
   }
 
   function getResolvedTheme() {
-    if (theme === "dark") return "vs-dark"
-    if (theme === "light") return "vs"
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "vs-dark" : "vs"
+    return theme === "dark" ? "vs-dark" : "vs"
   }
 
   function handleEditorDidMount(
@@ -51,23 +49,12 @@ const CodeEditor = ({
   ) {
     editorRef.current = editor
     monacoInstance.editor.setTheme(getResolvedTheme())
-    setEditorMounted(true);
+    setEditorMounted(true)
   }
 
   useEffect(() => {
     if (!editorRef.current) return
-
-    const applyTheme = () => {
-      monaco.editor.setTheme(getResolvedTheme())
-    }
-
-    applyTheme()
-
-    if (theme === "system") {
-      const media = window.matchMedia("(prefers-color-scheme: dark)")
-      media.addEventListener("change", applyTheme)
-      return () => media.removeEventListener("change", applyTheme)
-    }
+    monaco.editor.setTheme(getResolvedTheme())
   }, [theme])
 
   return (

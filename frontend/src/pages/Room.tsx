@@ -65,7 +65,7 @@ const Room = () => {
   }, [roomID, editorMounted]);
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider>
       <div className="app-container h-screen w-screen flex flex-col overflow-hidden pb-4">
         <Header />
 
