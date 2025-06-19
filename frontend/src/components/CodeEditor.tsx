@@ -5,6 +5,7 @@ import { editor as MonacoEditor } from "monaco-editor"
 import LanguageSelector from "./LanguageSelector"
 import languageTemplates from "../data/languageTemplates"
 import ThemeToggle from "./ThemeToggle"
+import DifficultySelector from "./DifficultySelector";
 import { useTheme } from "./ThemeProvider"
 
 type CodeEditorProps = {
@@ -24,6 +25,7 @@ const CodeEditor = ({
 }: CodeEditorProps) => {
   const [currentLanguage, setCurrentLanguage] = useState("python")
   const { theme } = useTheme()
+  const [difficulty, setDifficulty] = useState("easy");
 
   const handleSelectLanguage = (language: string) => {
     setCurrentLanguage(language)
@@ -61,7 +63,10 @@ const CodeEditor = ({
     <div className="editor-container h-full w-full">
       <div className="mb-2 flex justify-between items-center">
         <LanguageSelector onSelect={handleSelectLanguage} />
-        <ThemeToggle />
+        <div className="flex items-center gap-4">
+          <DifficultySelector value={difficulty} onChange={setDifficulty} />
+          <ThemeToggle />
+        </div>
       </div>
       <Editor
         height="100vh"
