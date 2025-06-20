@@ -9,41 +9,41 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Client struct{
-	id string
-	room *Room
-	conn *websocket.Conn
+type Client struct {
+	id          string
+	room        *Room
+	conn        *websocket.Conn
 	receiveEdit chan []types.Edit
 }
 
-func generateID() string{
+func generateID() string {
 	return uuid.NewString()
 }
 
 func NewClient(conn *websocket.Conn, room *Room) *Client {
 	return &Client{
-		id: generateID(),
-		room: room,
-		conn: conn,
+		id:          generateID(),
+		room:        room,
+		conn:        conn,
 		receiveEdit: make(chan []types.Edit),
 	}
 }
 
 func (c *Client) readPump() {
 	defer func() {
-        c.room.unregister <- c
-        c.conn.Close()
-        log.Println("Client closed connection")
-    }()
-	for{
+		c.room.unregister <- c
+		c.conn.Close()
+		log.Println("Client closed connection")
+	}()
+	for {
 		_, payload, err := c.conn.ReadMessage()
-		if err != nil{
+		if err != nil {
 			log.Println("Error reading message: ", err)
 			return
 		}
 		//log.Println("websocket received input: ", payload)
 		var edits []types.Edit
-		if err := json.Unmarshal(payload, &edits); err != nil{
+		if err := json.Unmarshal(payload, &edits); err != nil {
 			log.Println("Error:", err)
 			return
 		}
@@ -53,26 +53,24 @@ func (c *Client) readPump() {
 	}
 }
 
-func (c *Client) writePump(){
-	defer func(){
+func (c *Client) writePump() {
+	defer func() {
 		log.Println("Closing from write pump")
 		c.conn.Close()
 	}()
 
-	for{
-		output, ok := <- c.receiveEdit
-		log.Println("Writepump output from broadcast:" , output)
-		if !ok{
+	for {
+		output, ok := <-c.receiveEdit
+		log.Println("Writepump output from broadcast:", output)
+		if !ok {
 			log.Println("Error receiving broadcast")
 			return
 		}
 
 		log.Println("Sending message:", output)
-		if err := c.conn.WriteJSON(output); err != nil{
+		if err := c.conn.WriteJSON(output); err != nil {
 			log.Println("error writing message", err)
 			return
 		}
 	}
 }
-
-
