@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"interviewlab-backend/config"
 	"interviewlab-backend/internal/types"
 	"interviewlab-backend/postgres"
@@ -30,7 +31,7 @@ func InitRedisClient(addr string, password string, db int){
 
 //Hash is unnecessary but leave as a hash in case more fields get added
 func SaveRoomToRedis(roomID string, contentString string){
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 	defer cancel()
 	err := client.HSet(ctx, roomID, map[string]interface{}{
 		"content": contentString,
@@ -39,16 +40,23 @@ func SaveRoomToRedis(roomID string, contentString string){
 		log.Println("error setting file in redis for room: ", roomID, err)
 		return
 	}
+	if ttlErr := client.Expire(ctx, roomID, 5*time.Minute); ttlErr != nil{
+		log.Println("Failed to set TTL for room:", roomID, ttlErr)
+	}
 	log.Println("Saving room hash in redis")
 }
 
 var ErrRoomNotFound = errors.New("room not found in redis")
 
 func SyncContentFromRedis(roomID string) (string, error){
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 	defer cancel()
 	content, err := client.HGet(ctx, roomID, "content").Result()
 	if err == nil{
+		ttlResetErr := client.Expire(ctx, roomID, 5*time.Minute).Err()
+		if ttlResetErr != nil {
+			log.Println("Failed to reset TTL for room:", roomID, ttlResetErr)
+		}
 		return content, nil
 	}
 	if err == redis.Nil{
@@ -63,10 +71,14 @@ func SyncContentFromRedis(roomID string) (string, error){
 	return "", ErrRoomNotFound
 }
 
-func SyncContentToRedis(roomID string, contentString string){
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+func SyncContentToRedis(parentCtx context.Context, roomID string, contentString string){
+	ctx, cancel := context.WithTimeout(parentCtx, 1 * time.Second)
 	defer cancel()
 	err := client.HSet(ctx, roomID, "content", contentString).Err()
+	ttlResetErr := client.Expire(ctx, roomID, 5*time.Minute).Err()
+	if ttlResetErr != nil {
+		log.Println("Failed to reset TTL for room:", roomID, ttlResetErr)
+	}
 	if err != nil{
 		log.Println("error syncing diffs to redis for room: ", roomID, err)
 		return
@@ -105,4 +117,21 @@ func PublishDiffs(ctx context.Context, roomID string, editPayload types.RedisEnv
 		log.Println("redis: could not publish diffs for payload: ", editJSON)
 		return
 	}
+}
+
+func ClientExists(ctx context.Context, roomID string) (bool, error){
+	exists, err := client.Exists(ctx, roomID).Result()
+	if err != nil{
+		return false, fmt.Errorf("Redis EXISTS failed for %s, %w", roomID, err)
+	} else if exists > 0{
+		return true, nil
+	}
+	_, dbErr := postgres.RetrieveContent(ctx, roomID)
+	if dbErr == nil{
+		return true, nil
+	}
+	if err == postgres.ErrRoomNotFound{
+		return false, postgres.ErrRoomNotFound
+	}
+	return false, fmt.Errorf("Postgres lookup failed for %s, %w", roomID, err)
 }

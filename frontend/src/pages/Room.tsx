@@ -17,7 +17,13 @@ import type { Edit, Init } from "../data/types";
 
 const Room = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-  const [editorValue, setEditorValue] = useState("");
+  /*The editor useState is at the top level and we use a prop to pass it to CodeEditor. 
+  This way, CodeEditor can update the editor value without having to pass it as a prop.
+  */
+
+  /*We might have to refactor selectedLanguage, since LanguageSelector is a child of CodeEditor, I had to lift the state twice
+  to get it to the top level so that I could pass the selected language to the Output component, it works but is a little messy
+  */
   const [selectedLanguage, setSelectedLanguage] = useState("python");
   const [editorMounted, setEditorMounted] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
@@ -30,7 +36,7 @@ const Room = () => {
   };
 
   const handleReceiveEditorInit = (init: Init) => {
-    setEditorValue(init.content);
+    console.log("init editor content:", init.content);
     const editor = editorRef.current;
     if (!editor) {
       console.error("No editor found");
@@ -69,33 +75,31 @@ const Room = () => {
       <div className="app-container h-screen w-screen flex flex-col overflow-hidden pb-4">
         <Header />
 
-        <div className="code-section-container rounded-lg border border-gray-300 m-2 p-1 ml-3 mr-3">
-          <div className="flex-1">
-            <PanelGroup direction="horizontal">
-              <Panel defaultSize={70} minSize={20}>
-                <div className="h-full overflow-auto">
-                  <CodeEditor
-                    editorRef={editorRef}
-                    value={editorValue}
-                    onChange={(newValue) => setEditorValue(newValue)}
-                    onSelectedLanguage={(language) =>
-                      setSelectedLanguage(language)
-                    }
-                    setEditorMounted={setEditorMounted}
-                  />
-                </div>
-              </Panel>
-              <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
-              <Panel defaultSize={30} minSize={20}>
-                <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
-                  <Output language={selectedLanguage} input={editorValue} />
-                </div>
-              </Panel>
-            </PanelGroup>
-          </div>
+      <div className="code-section-container rounded-lg border border-gray-300 m-2 p-1 ml-3 mr-3">
+        <div className="flex-1">
+          <PanelGroup direction="horizontal">
+            <Panel defaultSize={70} minSize={20}>
+              <div className="h-full overflow-auto">
+                <CodeEditor
+                  editorRef={editorRef}
+                  onSelectedLanguage={(language) =>
+                    setSelectedLanguage(language)
+                  }
+                  setEditorMounted={setEditorMounted}
+                />
+              </div>
+            </Panel>
+            {/* Resizable Divider */}
+            <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
+            <Panel defaultSize={30} minSize={20}>
+              <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
+                <Output language={selectedLanguage} editorRef={editorRef} />
+              </div>
+            </Panel>
+          </PanelGroup>
         </div>
       </div>
-    </ThemeProvider>
+    </div>
   );
 };
 

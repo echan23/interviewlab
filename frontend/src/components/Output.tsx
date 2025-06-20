@@ -1,16 +1,18 @@
 import { executeCode } from "@/api/piston";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import * as monaco from "monaco-editor";
 
 interface OutputProps {
   language: string;
-  input: string;
+  editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
 }
 
-const Output = ({ language, input }: OutputProps) => {
+const Output = ({ language, editorRef }: OutputProps) => {
   const [output, setOutput] = useState("");
   const runCode = async () => {
-    const editorContent = input;
+    if (!editorRef.current) return;
+    const editorContent = editorRef.current.getValue();
     try {
       const response = await executeCode(language, editorContent);
       setOutput(response.run.output || "No output");

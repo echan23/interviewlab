@@ -45,7 +45,7 @@ func main() {
 	/*ROOMS LOGIC =================================================================================
 
 	==============================================================================================*/
-	m := websocket.NewManager()
+	websocket.MainManager = websocket.NewManager()
 	config.Init() //Sets the serverID
 	postgres.Init() //starts postgres connection
 	defer postgres.DB.Close()
@@ -55,19 +55,27 @@ func main() {
 	//Have a post method that handles creation of new Room
 	r.POST("/api/room/create", func(c *gin.Context){
 		log.Println("Generating new Room URL (main.go)")
-		m.HandleGenerateRoomRequest(c)
+		websocket.MainManager.HandleGenerateRoomRequest(c)
 	})
 
 	//Handles accessing an existing room
 	r.GET("/ws/:roomID", func(c *gin.Context){
 		roomID := c.Param("roomID")
-		if !m.AllowedRooms[roomID]{
-			log.Println("RoomID not allowed", roomID)
-			c.JSON(403, gin.H{"error": "Room does not exist"})
+		exists, err := redis.ClientExists(c.Request.Context(), roomID)
+		if err != nil{
+			if err == postgres.ErrRoomNotFound{
+				c.JSON(404, gin.H{"error": "Room does not exist"})
+				return
+			}
+			c.JSON(500, gin.H{"error": "Error validating room existence"})
 			return
 		}
+		if !exists{
+			c.JSON(404, gin.H{"error": "room does not exist"})
+        	return
+		}
 		log.Println("Routing client to Room (main.go)")
-		m.RouteClients(c, roomID)
+		websocket.MainManager.RouteClients(c, roomID)
 	})
 
 	//Keep this last in file always

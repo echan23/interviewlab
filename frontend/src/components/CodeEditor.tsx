@@ -1,26 +1,18 @@
-import React, { useState, useEffect } from "react"
-import * as monaco from "monaco-editor"
-import Editor from "@monaco-editor/react"
-import { editor as MonacoEditor } from "monaco-editor"
-import LanguageSelector from "./LanguageSelector"
-import languageTemplates from "../data/languageTemplates"
-import ThemeToggle from "./ThemeToggle"
-import DifficultySelector from "./DifficultySelector";
-import { useTheme } from "./ThemeProvider"
-import HintButtons from "./HintButtons"
-import GeneratePopover from "./GeneratePopover"
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
-import CompanySelector from "./CompanySelector"
-import { Button } from "./ui/button"
-import ContentSelector from "./ContentSelector"
+import React from "react";
+import { useState, useRef, useEffect } from "react";
+import * as monaco from "monaco-editor";
+import Editor from "@monaco-editor/react";
+import { editor as MonacoEditor } from "monaco-editor";
+import LanguageSelector from "./LanguageSelector";
+import languageTemplates from "../data/languageTemplates";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "next-themes";
 
 type CodeEditorProps = {
-  editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>
-  value: string
-  onChange: (value: string) => void
-  onSelectedLanguage: (value: string) => void
-  setEditorMounted: React.Dispatch<React.SetStateAction<boolean>>;
-}
+  editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  onSelectedLanguage: (value: string) => void;
+  setEditorMounted: (value: boolean) => void;
+};
 
 const CodeEditor = ({
   editorRef,
@@ -29,65 +21,52 @@ const CodeEditor = ({
   onSelectedLanguage,
   setEditorMounted,
 }: CodeEditorProps) => {
-  const [currentLanguage, setCurrentLanguage] = useState("python")
-  const { theme } = useTheme()
-  const [difficulty, setDifficulty] = useState("easy");
-  const [selectedCompany, setSelectedCompany] = useState(" ")
-  const [selectedTopic, setSelectedTopic] = useState(" ")
+  const [currentLanguage, setCurrentLanguage] = useState("python");
+  const { theme } = useTheme();
 
   const handleSelectLanguage = (language: string) => {
-    setCurrentLanguage(language)
-    onSelectedLanguage(language)
-  }
-
-  function handleEditorChange(
-    value: string | undefined,
-    ev: monaco.editor.IModelContentChangedEvent
-  ) {
-    if (value !== undefined) {
-      onChange(value)
-    }
-  }
+    setCurrentLanguage(language);
+    onSelectedLanguage(language);
+  };
 
   function getResolvedTheme() {
-    return theme === "dark" ? "vs-dark" : "vs"
+    if (theme === "dark") return "vs-dark";
+    if (theme === "light") return "vs";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "vs-dark"
+      : "vs";
   }
 
   function handleEditorDidMount(
     editor: MonacoEditor.IStandaloneCodeEditor,
     monacoInstance: typeof monaco
   ) {
-    editorRef.current = editor
-    monacoInstance.editor.setTheme(getResolvedTheme())
-    setEditorMounted(true)
+    editorRef.current = editor;
+    monacoInstance.editor.setTheme(getResolvedTheme());
+    setEditorMounted(true);
   }
 
   useEffect(() => {
-    if (!editorRef.current) return
-    monaco.editor.setTheme(getResolvedTheme())
-  }, [theme])
+    if (!editorRef.current) return;
+
+    const applyTheme = () => {
+      monaco.editor.setTheme(getResolvedTheme());
+    };
+
+    applyTheme();
+
+    if (theme === "system") {
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      media.addEventListener("change", applyTheme);
+      return () => media.removeEventListener("change", applyTheme);
+    }
+  }, [theme]);
 
   return (
     <div className="editor-container h-full w-full">
       <div className="mb-2 flex justify-between items-center">
         <LanguageSelector onSelect={handleSelectLanguage} />
-        <div className="flex items-center gap-4">
-          <Popover>
-            <PopoverTrigger>
-              <Button variant="outline">Generate</Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="space-y-4">
-                <DifficultySelector value={difficulty} onChange={setDifficulty} />
-                <CompanySelector value={selectedCompany} onChange={setSelectedCompany} />
-                <ContentSelector value={selectedTopic} onChange={setSelectedTopic} />
-                <Button variant="outline">Generate Question</Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-          <HintButtons />
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </div>
       <Editor
         height="100vh"
@@ -106,7 +85,7 @@ const CodeEditor = ({
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default CodeEditor
+export default CodeEditor;
