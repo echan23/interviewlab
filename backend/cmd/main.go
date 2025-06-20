@@ -61,10 +61,18 @@ func main() {
 	//Handles accessing an existing room
 	r.GET("/ws/:roomID", func(c *gin.Context){
 		roomID := c.Param("roomID")
-		if !websocket.MainManager.AllowedRooms[roomID]{
-			log.Println("RoomID not allowed", roomID)
-			c.JSON(403, gin.H{"error": "Room does not exist"})
+		exists, err := redis.ClientExists(c.Request.Context(), roomID)
+		if err != nil{
+			if err == postgres.ErrRoomNotFound{
+				c.JSON(404, gin.H{"error": "Room does not exist"})
+				return
+			}
+			c.JSON(500, gin.H{"error": "Error validating room existence"})
 			return
+		}
+		if !exists{
+			c.JSON(404, gin.H{"error": "room does not exist"})
+        	return
 		}
 		log.Println("Routing client to Room (main.go)")
 		websocket.MainManager.RouteClients(c, roomID)

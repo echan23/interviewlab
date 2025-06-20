@@ -102,10 +102,6 @@ func (r *Room) handleEdit(edits []types.Edit){
 
 func NewRoom(roomID string) *Room {
 	ctx, cancel := context.WithCancel(context.Background())
-	content, err := redis.SyncContentFromRedis(roomID)
-	if err != nil{
-		log.Println("Error retrieving room content, setting content as none")
-	}
 	return &Room{
 		Id: roomID,
 		clients: make(map[*Client]bool),
@@ -117,7 +113,6 @@ func NewRoom(roomID string) *Room {
 		publishInterval: 200 * time.Millisecond,
 		Ctx: ctx,
 		Cancel: cancel,
-		content: content,
 		hashWriteInterval: 2 * time.Second,
 		dbWriteInterval: 10 * time.Second,
 		persistDuration: 5 * time.Minute,

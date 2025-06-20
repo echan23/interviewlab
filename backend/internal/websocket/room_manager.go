@@ -11,7 +11,6 @@ import (
 
 type Manager struct{
 	rooms map[string]*Room
-	AllowedRooms map[string]bool
 	sync.RWMutex
 }
 
@@ -20,7 +19,6 @@ var MainManager *Manager
 func NewManager() *Manager{
 	return &Manager{
 		rooms: make(map[string]*Room),
-		AllowedRooms: make(map[string]bool),
 	}
 }
 
@@ -36,11 +34,12 @@ func (m *Manager) GetOrCreateRoom(roomID string) *Room{
 		return m.rooms[roomID]
 	}
 	newRoom := NewRoom(roomID)
-	prevContent, err := redis.SyncContentFromRedis(roomID)
+	content, err := redis.SyncContentFromRedis(roomID)
 	if err == redis.ErrRoomNotFound{
 		redis.SaveRoomToRedis(roomID, "")
+		content = ""
 	}
-	newRoom.content = prevContent	
+	newRoom.content = content	
 	go newRoom.Run(roomID) //Check if this is the right spot to start the goroutine
 	m.Lock()
 	m.rooms[roomID] = newRoom
@@ -67,7 +66,7 @@ func (m *Manager) HandleGenerateRoomRequest(c *gin.Context){
 	m.Lock()
 	defer m.Unlock()
 	roomID := m.generateRoomID()
-	m.AllowedRooms[roomID] = true
+	redis.SaveRoomToRedis(roomID, "")
 	c.JSON(200, gin.H{"roomID": roomID})
 }
 

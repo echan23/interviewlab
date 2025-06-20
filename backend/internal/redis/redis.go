@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"interviewlab-backend/config"
 	"interviewlab-backend/internal/types"
 	"interviewlab-backend/postgres"
@@ -116,4 +117,21 @@ func PublishDiffs(ctx context.Context, roomID string, editPayload types.RedisEnv
 		log.Println("redis: could not publish diffs for payload: ", editJSON)
 		return
 	}
+}
+
+func ClientExists(ctx context.Context, roomID string) (bool, error){
+	exists, err := client.Exists(ctx, roomID).Result()
+	if err != nil{
+		return false, fmt.Errorf("Redis EXISTS failed for %s, %w", roomID, err)
+	} else if exists > 0{
+		return true, nil
+	}
+	_, dbErr := postgres.RetrieveContent(ctx, roomID)
+	if dbErr == nil{
+		return true, nil
+	}
+	if err == postgres.ErrRoomNotFound{
+		return false, postgres.ErrRoomNotFound
+	}
+	return false, fmt.Errorf("Postgres lookup failed for %s, %w", roomID, err)
 }
