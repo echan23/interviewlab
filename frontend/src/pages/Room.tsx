@@ -75,31 +75,32 @@ const Room = () => {
       <div className="app-container h-screen w-screen flex flex-col overflow-hidden pb-4">
         <Header />
 
-      <div className="code-section-container rounded-lg border border-gray-300 m-2 p-1 ml-3 mr-3">
-        <div className="flex-1">
-          <PanelGroup direction="horizontal">
-            <Panel defaultSize={70} minSize={20}>
-              <div className="h-full overflow-auto">
-                <CodeEditor
-                  editorRef={editorRef}
-                  onSelectedLanguage={(language) =>
-                    setSelectedLanguage(language)
-                  }
-                  setEditorMounted={setEditorMounted}
-                />
-              </div>
-            </Panel>
-            {/* Resizable Divider */}
-            <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
-            <Panel defaultSize={30} minSize={20}>
-              <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
-                <Output language={selectedLanguage} editorRef={editorRef} />
-              </div>
-            </Panel>
-          </PanelGroup>
+        <div className="code-section-container rounded-lg border border-gray-300 m-2 p-1 ml-3 mr-3">
+          <div className="flex-1">
+            <PanelGroup direction="horizontal">
+              <Panel defaultSize={70} minSize={20}>
+                <div className="h-full overflow-auto">
+                  <CodeEditor
+                    editorRef={editorRef}
+                    onSelectedLanguage={(language) =>
+                      setSelectedLanguage(language)
+                    }
+                    setEditorMounted={setEditorMounted}
+                  />
+                </div>
+              </Panel>
+              {/* Resizable Divider */}
+              <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
+              <Panel defaultSize={30} minSize={20}>
+                <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
+                  <Output language={selectedLanguage} editorRef={editorRef} />
+                </div>
+              </Panel>
+            </PanelGroup>
+          </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

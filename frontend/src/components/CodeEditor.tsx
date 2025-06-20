@@ -7,6 +7,8 @@ import LanguageSelector from "./LanguageSelector";
 import languageTemplates from "../data/languageTemplates";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "next-themes";
+import GeneratePopover from "./GeneratePopover";
+import DifficultySelector from "./DifficultySelector";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
@@ -16,8 +18,6 @@ type CodeEditorProps = {
 
 const CodeEditor = ({
   editorRef,
-  value,
-  onChange,
   onSelectedLanguage,
   setEditorMounted,
 }: CodeEditorProps) => {
@@ -73,8 +73,6 @@ const CodeEditor = ({
         width="100vw"
         defaultLanguage="python"
         language={currentLanguage}
-        value={value}
-        onChange={handleEditorChange}
         onMount={handleEditorDidMount}
         theme={getResolvedTheme()}
         options={{
