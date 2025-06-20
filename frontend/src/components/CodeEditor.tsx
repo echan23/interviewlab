@@ -10,14 +10,12 @@ import { useTheme } from "next-themes";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
-  value: string;
   onSelectedLanguage: (value: string) => void;
   setEditorMounted: (value: boolean) => void;
 };
 
 const CodeEditor = ({
   editorRef,
-  value,
   onSelectedLanguage,
   setEditorMounted,
 }: CodeEditorProps) => {
@@ -73,7 +71,6 @@ const CodeEditor = ({
         width="100vw"
         defaultLanguage="python"
         language={currentLanguage}
-        value={value}
         onMount={handleEditorDidMount}
         theme={getResolvedTheme()}
         options={{

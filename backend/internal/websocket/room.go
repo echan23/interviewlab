@@ -32,6 +32,8 @@ type Room struct{
 	writeInProgress bool
 	flushedChannel chan struct{}
 	dbWriteInterval time.Duration
+	timer *time.Timer
+	persistDuration time.Duration
 }
 
 /*We pass broadcast instead of just a message because we ned to track senderid so that clients don't re-receive their own edits. 
@@ -50,23 +52,31 @@ func (r *Room) addClient(c *Client){
 	defer r.Unlock()
 	log.Println("New Client Connected", c.id)
 	r.clients[c] = true
+	if r.timer != nil{
+		r.timer.Stop()
+	}
+	r.timer = nil
 }
-
+//Add some sort of room shutdown feature
 func (r *Room) removeClient(c *Client){
 	r.Lock()
 	defer r.Unlock()
-	_, ok := r.clients[c]
-	if ok{
-		delete(r.clients, c)
-	}
+	delete(r.clients, c)
 	c.conn.Close()
+	if len(r.clients) == 0 && r.timer == nil{
+		log.Println("no clients, beginning shutdown soon: ", r.Id)
+		r.timer = time.AfterFunc(r.persistDuration, func(){
+			r.shutdown()
+		})
+	}
+
 	log.Println("Client Disconnected", c.id)
 }
 
-func (r *Room) scheduleShutdown(){
-	select{
-
-	}
+func (r *Room) shutdown(){
+	log.Println("Shutting down room: ", r.Id)
+	r.Cancel()
+	MainManager.removeRoom(r.Id)
 }
 
 func (r *Room) handleEdit(edits []types.Edit){
@@ -110,6 +120,7 @@ func NewRoom(roomID string) *Room {
 		content: content,
 		hashWriteInterval: 2 * time.Second,
 		dbWriteInterval: 10 * time.Second,
+		persistDuration: 5 * time.Minute,
 	}
 }
 
@@ -162,11 +173,11 @@ func (r *Room) startHashWriteRoutine(){
 	for{
 		select{
 			case <- r.Ctx.Done():
-					redis.SyncContentToRedis(r.Id, r.content)
+					redis.SyncContentToRedis(r.Ctx, r.Id, r.content)
 					return
 			
 			case <- ticker.C:
-				redis.SyncContentToRedis(r.Id, r.content)
+				redis.SyncContentToRedis(r.Ctx, r.Id, r.content)
 		}
 	}
 }
@@ -182,8 +193,6 @@ func (r *Room) startDBWriteRoutine(){
 				err := postgres.SaveToDB(r.Ctx, r.Id, r.content, time.Now())
 				if err != nil{
 					log.Println("Error saving to db:", r.Id, err)
-				} else{
-					log.Println("Room saved to db:", r.Id)
 				}
 		}
 	}
@@ -203,16 +212,17 @@ func (r *Room) Run(roomID string) {
 			case client := <-r.register:
 				r.addClient(client)
 				fmt.Println("Client connected", client.id)
-				redis.SyncContentToRedis(r.Id, r.content)
+				redis.SyncContentToRedis(r.Ctx, r.Id, r.content)
 			case client := <-r.unregister:
 				r.removeClient(client)
 				fmt.Println("Client disconnected", client.id)
 			case edit := <-r.broadcast:	
 				r.handleEdit(edit.Message)
-				for client := range(r.clients){
-					fmt.Println(client.id)
-				}
 				r.BroadcastEdit(edit)
 		}
 	}
+}
+
+func (r *Room) startDeleteRoom(){
+
 }

@@ -15,6 +15,8 @@ type Manager struct{
 	sync.RWMutex
 }
 
+var MainManager *Manager
+
 func NewManager() *Manager{
 	return &Manager{
 		rooms: make(map[string]*Room),
@@ -44,6 +46,13 @@ func (m *Manager) GetOrCreateRoom(roomID string) *Room{
 	m.rooms[roomID] = newRoom
 	m.Unlock()
 	return newRoom
+}
+
+func (m * Manager) removeRoom(roomID string){
+	m.Lock()
+	defer m.Unlock()
+	delete (m.rooms, roomID)
+	log.Println("Room removed from manager: ", roomID)
 }
 
 //Connects clients to their Room
