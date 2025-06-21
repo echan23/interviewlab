@@ -61,7 +61,7 @@ const CodeEditor = ({
         <LanguageSelector onSelect={handleSelectLanguage} />
         <div className="flex items-center gap-2">
           <GeneratePopover />
-          <HintButtons />
+          <HintButtons editorRef={editorRef} />
           <ThemeToggle />
         </div>
       </div>
