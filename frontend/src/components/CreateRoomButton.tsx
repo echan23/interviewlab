@@ -17,7 +17,19 @@ const CreateRoomButton = () => {
     }
   };
 
-  return <Button onClick={handleCreateRoom}>Create Room</Button>;
+  return (
+    <Button
+      className="
+    rounded-full px-8 py-4 text-lg font-semibold
+    shadow-md shadow-black/10 ring-1 ring-black/10
+    bg-neutral-900 text-white hover:bg-neutral-800
+    transition
+  "
+      onClick={handleCreateRoom}
+    >
+      Create Room
+    </Button>
+  );
 };
 
 export default CreateRoomButton;

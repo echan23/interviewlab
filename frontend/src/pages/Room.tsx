@@ -76,10 +76,10 @@ const Room = () => {
 
   return (
     <ThemeProvider>
-      <div className="app-container h-screen w-screen flex flex-col overflow-hidden pb-4">
+      <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
         <Header />
 
-        <div className="code-section-container rounded-lg border border-gray-300 m-2 p-2 ml-3 mr-3">
+        <div className="code-section-container rounded-lg border border-gray-300 m-2 p-2 ml-2 mr-2">
           <div className="flex-1">
             <PanelGroup direction="horizontal">
               <Panel defaultSize={70} minSize={20}>
@@ -93,7 +93,6 @@ const Room = () => {
                   />
                 </div>
               </Panel>
-              {/* Resizable Divider */}
               <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
               <Panel defaultSize={30} minSize={20}>
                 <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
