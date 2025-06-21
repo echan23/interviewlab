@@ -60,13 +60,11 @@ const CodeEditor = ({
       <div className="mb-2 flex justify-between items-center">
         <LanguageSelector onSelect={handleSelectLanguage} />
         <div className="flex items-center gap-2">
-          <GeneratePopover />
-          <HintButtons />
           <ThemeToggle />
         </div>
       </div>
       <Editor
-        height="84vh"
+        height="82vh"
         width="100vw"
         defaultLanguage="python"
         language={currentLanguage}
