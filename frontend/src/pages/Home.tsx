@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import CreateRoomButton from "@/components/CreateRoomButton";
+import LanguageShowdown from "@/components/LanguageShowdown";
 
 const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
@@ -57,6 +58,7 @@ export default function Home() {
       >
         The smarter way to&nbsp;start a live coding room
       </motion.h1>
+      <LanguageShowdown></LanguageShowdown>
 
       <motion.p
         initial={{ opacity: 0 }}
