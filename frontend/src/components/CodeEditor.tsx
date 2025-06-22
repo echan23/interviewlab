@@ -6,17 +6,6 @@ import { editor as MonacoEditor } from "monaco-editor";
 import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
-import HintButtons from "./HintButtons";
-import DifficultySelector from "./DifficultySelector";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import CompanySelector from "./CompanySelector";
-import { Button } from "./ui/button";
-import ContentSelector from "./ContentSelector";
-import GeneratePopover from "./GeneratePopover";
 
 type CodeEditorProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
@@ -49,7 +38,7 @@ const CodeEditor = ({
     monacoInstance.editor.setTheme(getResolvedTheme());
     setEditorMounted(true);
   }
-
+  //Useeffect for theme change
   useEffect(() => {
     if (!editorRef.current) return;
     monaco.editor.setTheme(getResolvedTheme());
@@ -60,8 +49,6 @@ const CodeEditor = ({
       <div className="mb-2 flex justify-between items-center">
         <LanguageSelector onSelect={handleSelectLanguage} />
         <div className="flex items-center gap-2">
-          <GeneratePopover />
-          <HintButtons editorRef={editorRef} />
           <ThemeToggle />
         </div>
       </div>

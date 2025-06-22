@@ -4,17 +4,36 @@ import type { Edit, Init } from "../data/types";
 
 let applyingRemote = false;
 
+const MAX_LINES = 100;
+
 const handleEditorUpdateEvent = (
   editor: monaco.editor.IStandaloneCodeEditor
 ) => {
   console.log("attaching listener");
-  const model = editor.getModel();
 
+  const model = editor.getModel();
   if (!model) return;
+
+  let lastValidValue = model.getValue();
 
   model.onDidChangeContent((event: monaco.editor.IModelContentChangedEvent) => {
     if (applyingRemote) return;
-    console.log("onDidChangeModelContent:", event);
+
+    const lineCount = model.getLineCount();
+    // Revert the user's last change if over the limit
+    if (lineCount > MAX_LINES) {
+      editor.executeEdits("", [
+        {
+          range: model.getFullModelRange(),
+          text: lastValidValue,
+        },
+      ]);
+      editor.pushUndoStop();
+      console.warn(`Max line count of ${MAX_LINES} reached. Edit reverted.`);
+      return;
+    }
+    // Update last valid value if still within limit
+    lastValidValue = model.getValue();
     sendUpdate(event);
   });
 };

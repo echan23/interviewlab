@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import CreateRoomButton from "@/components/CreateRoomButton";
-import LanguageShowdown from "@/components/LanguageShowdown";
+import LanguageShowdown from "@/components/homepage/LanguageShowdown";
 
 const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },

@@ -9,10 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Copy, Share2 } from "lucide-react";
 import { useState } from "react";
-import ActionsDropdown from "./ActionsDropdown";
+import ActionsDropdown from "./actiondropdown/ActionsDropdown";
 import { RedirectHome } from "./RedirectHome";
+import * as monaco from "monaco-editor";
 
-export default function Header() {
+//EditorRef gets drilled two levels from Room.tsx -> Header.tsx -> ActionsDropdown.tsx
+type HeaderProps = {
+  editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
+};
+
+export default function Header({ editorRef }: HeaderProps) {
   const { roomID } = useParams<{ roomID: string }>();
   const shareURL = `${window.location.origin}/lab/${roomID}`;
   const [copied, setCopied] = useState(false);
@@ -32,7 +38,7 @@ export default function Header() {
       {/* left group */}
       <div className="flex items-center gap-2">
         <RedirectHome />
-        <ActionsDropdown />
+        <ActionsDropdown editorRef={editorRef} />
       </div>
 
       {/* right share button */}

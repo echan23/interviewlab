@@ -77,7 +77,7 @@ const Room = () => {
   return (
     <ThemeProvider>
       <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
-        <Header />
+        <Header editorRef={editorRef} />
 
         <div className="code-section-container rounded-lg border border-gray-300 m-2 p-2 ml-2 mr-2">
           <div className="flex-1">
