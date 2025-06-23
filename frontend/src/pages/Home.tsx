@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import CreateRoomButton from "@/components/CreateRoomButton";
 import LanguageShowdown from "@/components/homepage/LanguageShowdown";
+import Footer from "@/components/homepage/Footer";
+
 
 const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
@@ -79,6 +81,7 @@ export default function Home() {
       >
         <CreateRoomButton></CreateRoomButton>
       </motion.div>
+      <Footer/>
     </div>
   );
 }
