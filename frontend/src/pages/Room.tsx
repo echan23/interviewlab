@@ -13,6 +13,7 @@ import connect, { disconnect } from "../api/websocket.ts";
 import type { Edit, Init } from "../data/types.ts";
 import { useParams } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider.tsx";
+import { useNavigate } from "react-router-dom";
 
 const Room = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -25,6 +26,7 @@ const Room = () => {
   */
   const [selectedLanguage, setSelectedLanguage] = useState("python");
   const socketRef = useRef<WebSocket | null>(null);
+  const navigate = useNavigate();
 
   //Handle updates to the editor
   const handleReceiveEditorUpdate = (receivedEdits: Edit[]) => {
@@ -65,7 +67,8 @@ const Room = () => {
     const socket = connect(
       roomID,
       handleReceiveEditorUpdate,
-      handleReceiveEditorInit
+      handleReceiveEditorInit,
+      navigate
     );
     socketRef.current = socket;
     return () => {

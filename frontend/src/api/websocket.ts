@@ -1,12 +1,14 @@
 import * as monaco from "monaco-editor";
 import type { Edit, Init } from "../data/types.ts";
 import type { Params } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 let socket: WebSocket;
 const connect = (
   roomID: string,
   onReceiveUpdate: (update: Edit[]) => void, //Callback that handles editor updates from other clients
-  onReceiveInit: (update: Init) => void //Callback that initializes local editor with codefile content when joining
+  onReceiveInit: (update: Init) => void, //Callback that initializes local editor with codefile content when joining
+  navigate: ReturnType<typeof useNavigate>
 ) => {
   socket = new WebSocket(`ws://localhost:8080/ws/${roomID}`);
   socket.onopen = () => {
@@ -23,11 +25,11 @@ const connect = (
       onReceiveUpdate(raw);
     }
   };
-
   socket.onclose = (event) => {
     console.log("Socket connection closing");
     if (event.code === 1006) {
-      alert("Could not join room — it may not exist.");
+      console.log("Socket closed by server");
+      navigate("/", { replace: true });
     }
   };
 
