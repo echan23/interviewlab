@@ -13,7 +13,9 @@ import ContentSelector from "../ContentSelector";
 import { Sparkles, Wand2, Lightbulb } from "lucide-react";
 import { useState } from "react";
 import * as monaco from "monaco-editor";
-import HintDialog from "../dialogs/hintDialog";
+import { updateEditorContentEvent } from "@/api/events";
+import type { Edit } from "@/data/types";
+import HintDialog from "@/components/dialogs/HintDialog";
 
 type ActionsDropdownProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
@@ -43,9 +45,21 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
       const data = await res.json();
       if (data.question) {
         const content = formatComment(data.question);
-        editorRef.current?.setValue(content);
-        //setQuestionContent(data.question);
-        //setQuestionDialogOpen(true);
+        const editor = editorRef.current;
+        const model = editor?.getModel();
+
+        if (editor && model) {
+          const fullRange = model.getFullModelRange();
+
+          const editOperation: monaco.editor.IIdentifiedSingleEditOperation = {
+            range: fullRange,
+            text: content,
+            forceMoveMarkers: true,
+          };
+
+          editor.executeEdits("generate-question", [editOperation]);
+          editor.pushUndoStop();
+        }
       }
     } catch (error) {
       console.error(error);
