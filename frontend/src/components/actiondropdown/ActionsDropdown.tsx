@@ -66,6 +66,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
       alert("Error connecting to server");
     } finally {
       setTimeout(() => setIsGenerating(false), 2000);
+      setOpen(false);
     }
   }
 
@@ -117,6 +118,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
       alert("Error connecting to the server.");
     } finally {
       setTimeout(() => setIsHinting(false), 2000);
+      setOpen(false);
     }
   }
 

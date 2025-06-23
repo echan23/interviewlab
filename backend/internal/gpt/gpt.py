@@ -30,7 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-REQUEST_INTERVAL = 2 
+REQUEST_INTERVAL = 1
 last_request_time = 0.0
 
 def global_rate_limiter():
