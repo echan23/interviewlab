@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import time
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI, RateLimitError
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from itertools import cycle
 from .prompts import get_hint_prompt, get_question_prompt
 
-
+#Config
 load_dotenv()
 api_keys = os.getenv("GPT_API_KEYS", "").split(",")
 if not api_keys:
@@ -29,6 +29,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+REQUEST_INTERVAL = 2 
+last_request_time = 0.0
+
+def global_rate_limiter():
+    global last_request_time
+    now = time.time()
+    if now - last_request_time < REQUEST_INTERVAL:
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait.")
+    last_request_time = now
 
 class HintRequest(BaseModel):
     code: str
@@ -115,6 +125,7 @@ async def generate_question(difficulty: str, company: str, topic: str) -> str:
 # REST API endpoint
 @app.post("/api/hint")
 async def hint_handler(req: HintRequest):
+    global_rate_limiter()
     try:
         hint = await get_gpt_response(req.code, req.hintType)
         return {"hint": hint}
@@ -124,6 +135,7 @@ async def hint_handler(req: HintRequest):
     
 @app.post("/api/generate")
 async def generate_handler(req: QuestionRequest):
+    global_rate_limiter()
     try:
         question = await generate_question(req.difficulty, req.company, req.topic)
         return {"question": question}
