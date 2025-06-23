@@ -1,5 +1,8 @@
+# ignoring env files
 backend/.env
 .env
 .env
 /backend/.env
+
+# ignoring virtual envs
 /venv/
