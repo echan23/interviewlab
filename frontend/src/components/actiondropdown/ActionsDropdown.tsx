@@ -133,7 +133,6 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent align="start" sideOffset={8} className="w-64 space-y-4">
-          {/* Generate section */}
           <div className="space-y-3">
             <DifficultySelector value={difficulty} onChange={setDifficulty} />
             <CompanySelector value={company} onChange={setCompany} />
