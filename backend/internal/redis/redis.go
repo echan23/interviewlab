@@ -37,9 +37,12 @@ func SaveRoomToRedis(roomID string, contentString string){
 		log.Println("error setting file in redis for room: ", roomID, err)
 		return
 	}
-	if ttlErr := Client.Expire(ctx, roomID, 5*time.Minute); ttlErr != nil{
+	if ok, ttlErr := Client.Expire(ctx, roomID, 5*time.Minute).Result(); ttlErr != nil{
 		log.Println("Failed to set TTL for room:", roomID, ttlErr)
+	} else if !ok{
+		log.Println("TTL not set, key might not exist: ", roomID)
 	}
+
 	log.Println("Saving room hash in redis")
 }
 

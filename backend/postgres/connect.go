@@ -27,9 +27,9 @@ func Init(){
 
 	pool, err := pgxpool.New(context.Background(), url)
 	if err != nil{
-		log.Fatal("Postgres conneciton failed")
+		log.Fatal("Postgres connection failed")
 	}
-
+	log.Println("Connected to Postgres")
 	DB = pool
 }
 
