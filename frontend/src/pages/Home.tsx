@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import CreateRoomButton from "@/components/CreateRoomButton";
+import CreateRoomButtonWithCaptcha from "@/components/CreateRoomButtonWithCaptcha";
 import LanguageShowdown from "@/components/homepage/LanguageShowdown";
 import Footer from "@/components/homepage/Footer";
 
@@ -79,7 +79,7 @@ export default function Home() {
         transition={{ delay: 0.8, duration: 0.6 }}
         className="relative z-10 mt-10"
       >
-        <CreateRoomButton></CreateRoomButton>
+        <CreateRoomButtonWithCaptcha></CreateRoomButtonWithCaptcha>
       </motion.div>
       <Footer/>
     </div>

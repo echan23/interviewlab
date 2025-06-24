@@ -1,9 +1,11 @@
 package websocket
 
 import (
+	captcha "interviewlab-backend/internal/captcha"
 	"interviewlab-backend/internal/redis"
 	"log"
 	"sync"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -61,13 +63,29 @@ func (m *Manager) RouteClients(c *gin.Context, roomID string) {
 	room.ServeWS(c)
 }
 
-//Handles the post request when a client wants to create a new codefile. 
-func (m *Manager) HandleGenerateRoomRequest(c *gin.Context){
-	m.Lock()
-	defer m.Unlock()
+type captchaRequest struct {
+	Captcha string `json:"captcha"`
+}
+
+//Handles the post request when a client wants to create a new codefile and prompts for a captcha. 
+func (m *Manager) HandleGenerateRoomRequest(c *gin.Context) {
+	var req captchaRequest
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	log.Println("Received captcha token:", req.Captcha)z
+
+	if err := captcha.VerifyCaptcha(req.Captcha); err != nil {
+		log.Println("Captcha verification failed:", err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Captcha failed"})
+		return
+	}
+
 	roomID := m.generateRoomID()
 	redis.SaveRoomToRedis(roomID, "")
-	c.JSON(200, gin.H{"roomID": roomID})
+	c.JSON(http.StatusOK, gin.H{"roomID": roomID})
 }
 
 
