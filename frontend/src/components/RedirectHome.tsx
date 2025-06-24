@@ -8,9 +8,9 @@ export function RedirectHome() {
   return (
     <Button
       size="icon"
-      variant="secondary"
+      variant="ghost"
       onClick={() => navigate("/")}
-      className="h-12 w-12 rounded-lg shadow-md hover:scale-105 transition-transform"
+      className="h-12 w-12 rounded-lg bg-transparent hover:bg-transparent hover:text-inherit hover:shadow-none hover:ring-0"
     >
       <FlaskConical className="h-7 w-7" />
     </Button>
