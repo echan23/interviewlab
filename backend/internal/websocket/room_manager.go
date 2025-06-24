@@ -69,16 +69,3 @@ func (m *Manager) HandleGenerateRoomRequest(c *gin.Context){
 	redis.SaveRoomToRedis(roomID, "")
 	c.JSON(200, gin.H{"roomID": roomID})
 }
-
-
-/*
-Manager logic:
-	When a user creates a new codefile (POST) we call HandleGenerateRoomRequest which creates the URl and adds it to the map of
-	approved URLs.
-
-	When a URL is used to connect, we validate the URL, then call the GetOrCreateRoom method and connect the user to the returned Room.
-	Case 1: The Room already exists, happens when the user is using the url in the browser to access their codefile
-	Case 2: The Room doesn't exist, occurs when the user is using the URL that has been generated for them from HandleGenerateRoomRequest
-
-	For now create a connect room button on the front end that returns a URL, use this to test the room connections
-*/

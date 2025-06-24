@@ -21,27 +21,6 @@ func main() {
 	  }))
 
 
-	/*API LOGIC =================================================================================
-	==============================================================================================*/
-
-	/*err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	token := os.Getenv("GPT_API_KEY")
-	if token == "" {
-		log.Fatal("Missing GPT_API_KEY in environment")
-	}
-	config := openai.DefaultConfig(token)
-	config.BaseURL = "https://models.github.ai/inference"
-	//client := openai.NewClientWithConfig(config)*/
-
-	//r.POST("/api/hint", HintHandler(client))
-
-
-	
-
 	/*ROOMS LOGIC =================================================================================
 
 	==============================================================================================*/
@@ -49,8 +28,7 @@ func main() {
 	config.Init() //Sets the serverID
 	postgres.Init() //starts postgres connection
 	defer postgres.DB.Close()
-
-	redis.InitRedisClient("localhost:6379", "", 0)
+	redis.InitRedisClient()
 
 	//Have a post method that handles creation of new Room
 	r.POST("/api/room/create", func(c *gin.Context){

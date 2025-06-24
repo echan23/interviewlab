@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from openai import OpenAI, RateLimitError
 from dotenv import load_dotenv
 from itertools import cycle
-from .prompts import get_hint_prompt, get_question_prompt
+from prompts import get_hint_prompt, get_question_prompt
 
 #Config
 load_dotenv()

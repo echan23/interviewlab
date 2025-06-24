@@ -12,13 +12,15 @@ import { useState } from "react";
 import ActionsDropdown from "./actiondropdown/ActionsDropdown";
 import { RedirectHome } from "./RedirectHome";
 import * as monaco from "monaco-editor";
+import UserCount from "./UserCount";
 
 //EditorRef gets drilled two levels from Room.tsx -> Header.tsx -> ActionsDropdown.tsx
 type HeaderProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  userCount: number;
 };
 
-export default function Header({ editorRef }: HeaderProps) {
+export default function Header({ editorRef, userCount }: HeaderProps) {
   const { roomID } = useParams<{ roomID: string }>();
   const shareURL = `${window.location.origin}/lab/${roomID}`;
   const [copied, setCopied] = useState(false);
@@ -35,46 +37,48 @@ export default function Header({ editorRef }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between px-3 py-1">
-      {/* left group */}
+      {/* Left action buttons*/}
       <div className="flex items-center gap-2">
         <RedirectHome />
         <ActionsDropdown editorRef={editorRef} />
       </div>
 
-      {/* right share button */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="secondary"
-            className="flex items-center gap-2 rounded-lg shadow-md hover:scale-105 transition-transform"
-          >
-            <Share2 className="h-4 w-4" />
-            {copied ? "Copied!" : "Share"}
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align="end" className="w-80">
-          <DropdownMenuLabel className="pb-2">
-            Share this room
-          </DropdownMenuLabel>
-          <div className="flex items-center gap-2 px-2 pb-2">
-            <Input
-              readOnly
-              value={shareURL}
-              className="flex-1 text-sm"
-              onFocus={(e) => e.currentTarget.select()}
-            />
+      <div className="header-right-components flex flex-row">
+        <UserCount count={userCount} />
+        {/* Share button*/}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
-              variant="outline"
-              size="icon"
-              onClick={handleCopy}
-              className="shrink-0"
+              variant="secondary"
+              className="flex items-center gap-2 rounded-lg shadow-md hover:scale-105 transition-transform"
             >
-              <Copy size={16} />
+              <Share2 className="h-4 w-4" />
+              {copied ? "Copied!" : "Share"}
             </Button>
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuLabel className="pb-2">
+              Share this room
+            </DropdownMenuLabel>
+            <div className="flex items-center gap-2 px-2 pb-2">
+              <Input
+                readOnly
+                value={shareURL}
+                className="flex-1 text-sm"
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleCopy}
+                className="shrink-0"
+              >
+                <Copy size={16} />
+              </Button>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

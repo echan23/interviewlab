@@ -14,6 +14,7 @@ type Client struct{
 	room *Room
 	conn *websocket.Conn
 	receiveEdit chan []types.Edit
+	send chan []byte
 }
 
 func generateID() string{
@@ -26,6 +27,7 @@ func NewClient(conn *websocket.Conn, room *Room) *Client {
 		room: room,
 		conn: conn,
 		receiveEdit: make(chan []types.Edit),
+		send: make(chan []byte),
 	}
 }
 

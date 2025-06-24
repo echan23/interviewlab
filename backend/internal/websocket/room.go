@@ -208,9 +208,13 @@ func (r *Room) Run(roomID string) {
 				r.addClient(client)
 				fmt.Println("Client connected", client.id)
 				redis.SyncContentToRedis(r.Ctx, r.Id, r.content)
+				r.AddClientToRedis(client.id)
+				r.BroadcastUserCountUpdate()
 			case client := <-r.unregister:
 				r.removeClient(client)
 				fmt.Println("Client disconnected", client.id)
+				r.RemoveClientFromRedis(client.id)
+				r.BroadcastUserCountUpdate()
 			case edit := <-r.broadcast:	
 				r.handleEdit(edit.Message)
 				r.BroadcastEdit(edit)
@@ -218,6 +222,36 @@ func (r *Room) Run(roomID string) {
 	}
 }
 
-func (r *Room) startDeleteRoom(){
+func (r *Room) AddClientToRedis(clientID string) {
+	if err := redis.Client.SAdd(r.Ctx, "room:"+r.Id+":clients", clientID).Err(); err != nil {
+		fmt.Println(fmt.Errorf("Error adding client %s to Redis for room %s: %w", clientID, r.Id, err))
+	}
+}
 
+func (r *Room) RemoveClientFromRedis(clientID string) {
+	if err := redis.Client.SRem(r.Ctx, "room:"+r.Id+":clients", clientID).Err(); err != nil {
+		fmt.Println(fmt.Errorf("Error removing client %s from Redis for room %s: %w", clientID, r.Id, err))
+	}
+	//If no users left delete client set immediately
+	if count, _ := redis.Client.SCard(r.Ctx, "room:"+r.Id+":clients").Result(); count == 0 {
+		if err := redis.Client.Del(r.Ctx, "room:"+r.Id+":clients").Err(); err != nil {
+			fmt.Println("Error deleting empty room key:", err)
+		}
+	}
+}
+
+func (r *Room) BroadcastUserCountUpdate() {
+	count, err := redis.Client.SCard(r.Ctx, "room:"+r.Id+":clients").Result()
+	if err != nil {
+		fmt.Println(fmt.Errorf("Error getting user count for room %s: %w", r.Id, err))
+		return
+	}
+	for c := range r.clients {
+		if err := c.conn.WriteJSON(map[string]interface{}{
+			"type":  "userCountUpdate",
+			"count": count,
+		}); err != nil {
+			fmt.Println("Error sending user count to client:", err)
+		}
+	}
 }

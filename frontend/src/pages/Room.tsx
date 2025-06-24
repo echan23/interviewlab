@@ -25,6 +25,7 @@ const Room = () => {
   to get it to the top level so that I could pass the selected language to the Output component, it works but is a little messy
   */
   const [selectedLanguage, setSelectedLanguage] = useState("python");
+  const [userCount, setUserCount] = useState(1);
   const socketRef = useRef<WebSocket | null>(null);
   const navigate = useNavigate();
 
@@ -68,6 +69,7 @@ const Room = () => {
       roomID,
       handleReceiveEditorUpdate,
       handleReceiveEditorInit,
+      setUserCount,
       navigate
     );
     socketRef.current = socket;
@@ -80,7 +82,7 @@ const Room = () => {
   return (
     <ThemeProvider>
       <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
-        <Header editorRef={editorRef} />
+        <Header editorRef={editorRef} userCount={userCount} />
 
         <div className="code-section-container rounded-lg border border-gray-300 m-2 p-2 ml-2 mr-2">
           <div className="flex-1">

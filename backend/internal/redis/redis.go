@@ -9,6 +9,7 @@ import (
 	"interviewlab-backend/internal/types"
 	"interviewlab-backend/postgres"
 	"log"
+	"os"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -19,28 +20,24 @@ type CodeFile struct{
 	Content string `json:"content"`
 }
 
-var client *redis.Client
-func InitRedisClient(addr string, password string, db int){
-	client = redis.NewClient(&redis.Options{
-		Addr: addr,
-		Password:password,
-		DB: db,
-		Protocol: 2,
-	})
+var Client *redis.Client
+func InitRedisClient(){
+	opt, _ := redis.ParseURL(os.Getenv("REDIS_URL"))
+	Client = redis.NewClient(opt)
 }
 
 //Hash is unnecessary but leave as a hash in case more fields get added
 func SaveRoomToRedis(roomID string, contentString string){
 	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 	defer cancel()
-	err := client.HSet(ctx, roomID, map[string]interface{}{
+	err := Client.HSet(ctx, roomID, map[string]interface{}{
 		"content": contentString,
 	}).Err()
 	if err != nil{
 		log.Println("error setting file in redis for room: ", roomID, err)
 		return
 	}
-	if ttlErr := client.Expire(ctx, roomID, 5*time.Minute); ttlErr != nil{
+	if ttlErr := Client.Expire(ctx, roomID, 5*time.Minute); ttlErr != nil{
 		log.Println("Failed to set TTL for room:", roomID, ttlErr)
 	}
 	log.Println("Saving room hash in redis")
@@ -51,9 +48,9 @@ var ErrRoomNotFound = errors.New("room not found in redis")
 func SyncContentFromRedis(roomID string) (string, error){
 	ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 	defer cancel()
-	content, err := client.HGet(ctx, roomID, "content").Result()
+	content, err := Client.HGet(ctx, roomID, "content").Result()
 	if err == nil{
-		ttlResetErr := client.Expire(ctx, roomID, 5*time.Minute).Err()
+		ttlResetErr := Client.Expire(ctx, roomID, 5*time.Minute).Err()
 		if ttlResetErr != nil {
 			log.Println("Failed to reset TTL for room:", roomID, ttlResetErr)
 		}
@@ -74,8 +71,8 @@ func SyncContentFromRedis(roomID string) (string, error){
 func SyncContentToRedis(parentCtx context.Context, roomID string, contentString string){
 	ctx, cancel := context.WithTimeout(parentCtx, 1 * time.Second)
 	defer cancel()
-	err := client.HSet(ctx, roomID, "content", contentString).Err()
-	ttlResetErr := client.Expire(ctx, roomID, 5*time.Minute).Err()
+	err := Client.HSet(ctx, roomID, "content", contentString).Err()
+	ttlResetErr := Client.Expire(ctx, roomID, 5*time.Minute).Err()
 	if ttlResetErr != nil {
 		log.Println("Failed to reset TTL for room:", roomID, ttlResetErr)
 	}
@@ -86,7 +83,7 @@ func SyncContentToRedis(parentCtx context.Context, roomID string, contentString 
 }
 
 func SubscribeDiffs(ctx context.Context, roomID string, handleIncomingDiff func([]types.Edit)){
-	pubsub := client.Subscribe(ctx, "room:"+roomID+":diffs")
+	pubsub := Client.Subscribe(ctx, "room:"+roomID+":diffs")
 	channel := pubsub.Channel()
 	for{
 		select{
@@ -113,14 +110,14 @@ func PublishDiffs(ctx context.Context, roomID string, editPayload types.RedisEnv
 		log.Println("Error converting edits to JSON")
 		return
 	}
-	if err := client.Publish(ctx, "room:"+roomID+":diffs", editJSON).Err(); err != nil{
+	if err := Client.Publish(ctx, "room:"+roomID+":diffs", editJSON).Err(); err != nil{
 		log.Println("redis: could not publish diffs for payload: ", editJSON)
 		return
 	}
 }
 
 func ClientExists(ctx context.Context, roomID string) (bool, error){
-	exists, err := client.Exists(ctx, roomID).Result()
+	exists, err := Client.Exists(ctx, roomID).Result()
 	if err != nil{
 		return false, fmt.Errorf("Redis EXISTS failed for %s, %w", roomID, err)
 	} else if exists > 0{

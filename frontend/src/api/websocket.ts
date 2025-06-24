@@ -8,6 +8,7 @@ const connect = (
   roomID: string,
   onReceiveUpdate: (update: Edit[]) => void, //Callback that handles editor updates from other clients
   onReceiveInit: (update: Init) => void, //Callback that initializes local editor with codefile content when joining
+  setUserCount: (count: number) => void,
   navigate: ReturnType<typeof useNavigate>
 ) => {
   socket = new WebSocket(`ws://localhost:8080/ws/${roomID}`);
@@ -21,6 +22,9 @@ const connect = (
     //Note: Edit[] objects don't have a type field
     if (raw.type === "init") {
       onReceiveInit(raw);
+    } else if (raw.type == "userCountUpdate") {
+      console.log("received usercount update");
+      setUserCount(raw.count);
     } else {
       onReceiveUpdate(raw);
     }
