@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import CreateRoomButton from "@/components/CreateRoomButton";
+import CreateRoomButton from "@/components/homepage/CreateRoomButton";
 import LanguageShowdown from "@/components/homepage/LanguageShowdown";
 import Footer from "@/components/homepage/Footer";
 import UseCases from "@/components/homepage/UseCases";
