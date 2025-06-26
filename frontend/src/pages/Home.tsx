@@ -55,24 +55,24 @@ export default function Home() {
       </div>
 
       {/* Center content */}
-      <div className="flex flex-col items-center justify-center flex-grow z-10 px-4">
+      <div className="flex flex-col items-center justify-center flex-grow z-10 px-4 mt-20">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl text-center text-5xl font-extrabold leading-tight lg:text-6xl"
+          className="max-w-5xl text-center text-5xl font-extrabold leading-tight lg:text-6xl"
         >
-          The smarter way to&nbsp;start a live coding room
+          Practice smarter. Interview better.
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-6 text-center text-lg text-neutral-600 max-w-xl"
+          className="mt-4 text-center text-lg text-neutral-600 max-w"
         >
-          Spin up an interactive pad, share a link, and collaborate in
-          real&nbsp;time.
+          Compile code, get AI-powered feedback, and collaborate in real time —
+          all in your browser.
         </motion.p>
 
         <motion.div
@@ -87,9 +87,7 @@ export default function Home() {
 
       {/* Feature section (GIFs, LanguageShowdown, etc.) */}
       <div className="z-10 mt-12 mb-8 px-4">
-        <LanguageShowdown />
         <UseCases />
-        <Footer />
       </div>
     </div>
   );
