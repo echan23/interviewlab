@@ -36,7 +36,7 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between px-3 py-1">
+    <header className="flex items-center justify-between px-3 py-1 mt-1">
       {/* Left action buttons*/}
       <div className="flex items-center gap-2">
         <RedirectHome />

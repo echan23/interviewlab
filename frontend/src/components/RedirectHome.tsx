@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { FlaskConical } from "lucide-react";
 
 export function RedirectHome() {
   const navigate = useNavigate();
@@ -10,9 +9,21 @@ export function RedirectHome() {
       size="icon"
       variant="ghost"
       onClick={() => navigate("/")}
-      className="h-12 w-12 rounded-lg bg-transparent hover:bg-transparent hover:text-inherit hover:shadow-none hover:ring-0"
+      className={`
+        h-12 w-12 rounded-lg
+        bg-transparent text-inherit shadow-none ring-0
+
+        /* Override all hover/focus/active from the variant */
+        hover:!bg-transparent hover:!text-inherit hover:!shadow-none hover:!ring-0
+        focus:!bg-transparent focus:!text-inherit focus:!shadow-none focus:!ring-0
+        active:!bg-transparent active:!text-inherit active:!shadow-none active:!ring-0
+      `}
     >
-      <FlaskConical className="h-7 w-7" />
+      <img
+        src="/interviewlablogo.svg"
+        alt="Logo"
+        className="h-10 w-10 md:h-8 md:w-8 dark:invert"
+      />
     </Button>
   );
 }
