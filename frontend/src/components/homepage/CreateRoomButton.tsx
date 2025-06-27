@@ -54,7 +54,7 @@ const CreateRoomButton = () => {
 
         {/* label */}
         <span className="font-semibold text-lg">
-          {loading ? "Creating…" : "Create Room"}
+          {loading ? "Creating…" : "Create Lab"}
         </span>
 
         {/* arrow slides on hover */}

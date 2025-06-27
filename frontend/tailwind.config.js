@@ -22,14 +22,38 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
+        aurora: "aurora 60s linear infinite",
       },
       animation: {
         "spin-slow": "spin 2s linear infinite",
       },
     },
   },
-  plugins: [],
+  plugins: [addVariablesForColors],
 };
+
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

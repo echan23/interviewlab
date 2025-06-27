@@ -1,10 +1,8 @@
 "use client";
-
 import { motion } from "framer-motion";
 import CreateRoomButton from "@/components/homepage/CreateRoomButton";
-import LanguageShowdown from "@/components/homepage/LanguageShowdown";
 import Footer from "@/components/homepage/Footer";
-import UseCases from "@/components/homepage/UseCases";
+import Features from "@/components/homepage/Features";
 
 const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
@@ -14,80 +12,111 @@ const floating = [
   { src: "/assets/token.svg", x: "40%", y: "-8%", delay: 0.4 },
 ];
 
+const orbs = [
+  { size: 200, x: "15%", y: "25%", delay: 0, intensity: 0.3 },
+  { size: 150, x: "80%", y: "10%", delay: 2, intensity: 0.2 },
+  { size: 180, x: "70%", y: "80%", delay: 4, intensity: 0.25 },
+  { size: 120, x: "10%", y: "70%", delay: 1, intensity: 0.35 },
+  { size: 100, x: "85%", y: "60%", delay: 3, intensity: 0.4 },
+  { size: 160, x: "45%", y: "15%", delay: 5, intensity: 0.3 },
+];
+
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-neutral-50 text-neutral-900 overflow-hidden flex flex-col">
-      {/* Floating elements */}
+    <div className="relative min-h-screen text-white overflow-hidden flex flex-col bg-black">
+      {/* Lightweight animated gradient - uses transform instead of background changes */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Static base gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-white/4"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_50%)]"></div>
+
+        {/* Simple moving elements using CSS animations */}
+        <div className="absolute w-96 h-96 -top-48 -left-48 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div
+          className="absolute w-80 h-80 -bottom-40 -right-40 bg-white/4 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute w-64 h-64 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/3 rounded-full blur-3xl animate-bounce"
+          style={{ animationDuration: "8s" }}
+        ></div>
+      </div>
+
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.1)_0%,_transparent_70%)]"></div>
+      </div>
+
+      {/* Simple floating icons - much lighter animation */}
       <div className="pointer-events-none absolute inset-0 z-0">
-        {floating.map(({ src, x, y, delay }, i) => (
-          <motion.img
+        {floating.map(({ src, x, y }, i) => (
+          <img
             key={i}
             src={src}
             alt=""
-            className="absolute select-none"
-            style={{ translateX: x, translateY: y }}
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 50,
-              repeat: Infinity,
-              ease: "linear",
-              delay,
+            className="absolute select-none w-12 h-12 opacity-20 brightness-0 invert animate-pulse"
+            style={{
+              left: x,
+              top: y,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: "3s",
             }}
           />
         ))}
       </div>
 
-      {/* Header */}
-      <div className="flex justify-between items-center px-40 py-4 z-10">
-        <div className="flex items-center">
-          <img
-            src="/interviewlablogo.svg"
-            alt="InterviewLab Logo"
-            className="h-10 w-10 md:h-12 md:w-12"
-          />
-          <span className="text-xl md:text-2xl font-bold tracking-tight text-neutral-800">
+      <div className="flex justify-between items-center px-6 md:px-12 py-6 z-10 relative backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img
+              src="/interviewlablogo.svg"
+              alt="InterviewLab Logo"
+              className="h-10 w-10 md:h-12 md:w-12 brightness-0 invert"
+            />
+            <div className="absolute inset-0 bg-white rounded-full opacity-20 blur-sm"></div>
+          </div>
+          <span className="text-xl md:text-2xl font-bold tracking-tight text-white">
             Interview Lab
           </span>
         </div>
 
-        <div className="text-sm text-neutral-500">266 rooms created</div>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-white/80">
+              266 labs created
+            </span>
+          </div>
+          <div className="md:hidden text-sm text-white/60">266 labs</div>
+        </div>
       </div>
 
-      {/* Center content */}
-      <div className="flex flex-col items-center justify-center flex-grow z-10 px-4 mt-20">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl text-center text-5xl font-extrabold leading-tight lg:text-6xl"
-        >
-          Practice smarter. Interview better.
-        </motion.h1>
+      <div className="flex-1 z-10 relative flex items-center justify-center px-4">
+        <div className="relative flex flex-col gap-8 items-center justify-center text-center max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+            <span className="block text-white">Practice smarter.</span>
+            <span className="block text-gray-300">Interview better.</span>
+          </h1>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-4 text-center text-lg text-neutral-600 max-w"
-        >
-          Compile code, get AI-powered feedback, and collaborate in real time —
-          all in your browser.
-        </motion.p>
+          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed">
+            Compile code, get AI-powered feedback, and collaborate in real time
+            — all in your browser.
+          </p>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-8"
-        >
-          <CreateRoomButton />
-        </motion.div>
+          <div className="mt-4">
+            <CreateRoomButton />
+          </div>
+
+          <div className="flex items-center gap-8 mt-8 text-sm text-gray-500"></div>
+        </div>
       </div>
 
-      {/* Feature section (GIFs, LanguageShowdown, etc.) */}
-      <div className="z-10 mt-12 mb-8 px-4">
-        <UseCases />
+      <div className="w-full z-10 relative mt-16 mb-8">
+        <Features />
+      </div>
+
+      <div className="w-full z-10 relative mt-auto">
+        <Footer />
       </div>
     </div>
   );

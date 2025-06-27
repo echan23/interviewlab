@@ -29,8 +29,6 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
   const [hintDialogOpen, setHintDialogOpen] = useState(false);
   const [hintText, setHintText] = useState("");
   const [hintTitle, setHintTitle] = useState("");
-  //const [questionContent, setQuestionContent] = useState("");
-  //const [questionDialogOpen, setQuestionDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isHinting, setIsHinting] = useState(false);
 
@@ -128,58 +126,85 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
         <PopoverTrigger asChild>
           <Button
             size="icon"
-            variant="secondary"
-            className="h-12 w-12 rounded-lg shadow-md p-0 hover:scale-105 transition-transform"
+            variant="ghost"
+            className="relative h-10 w-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:scale-105 transition-all duration-200 group"
           >
-            <Sparkles className="h-7 w-7" />
+            <Sparkles className="h-5 w-5 text-purple-600 group-hover:text-purple-700 transition-colors" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" sideOffset={8} className="w-64 space-y-4">
-          <div className="space-y-3">
-            <DifficultySelector value={difficulty} onChange={setDifficulty} />
-            <CompanySelector value={company} onChange={setCompany} />
-            <ContentSelector value={topic} onChange={setTopic} />
-            <Button
-              variant="default"
-              className="w-full flex items-center gap-2"
-              onClick={handleGenerate}
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-              ) : (
-                <Wand2 className="h-4 w-4" />
-              )}
-              Generate
-            </Button>
-          </div>
-          <div className="flex gap-2 pt-3 border-t">
-            <Button
-              variant="outline"
-              className="flex-1 flex items-center gap-1"
-              onClick={() => handleHintClick("weak")}
-              disabled={isHinting}
-            >
-              {isHinting ? (
-                <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></span>
-              ) : (
-                <Lightbulb className="h-4 w-4" />
-              )}
-              Weak
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 flex items-center gap-1"
-              onClick={() => handleHintClick("strong")}
-              disabled={isHinting}
-            >
-              {isHinting ? (
-                <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></span>
-              ) : (
-                <Lightbulb className="h-4 w-4" />
-              )}
-              Strong
-            </Button>
+        <PopoverContent
+          align="start"
+          sideOffset={8}
+          className="w-72 p-4 border border-gray-200 shadow-lg bg-white rounded-lg"
+        >
+          <div className="space-y-4">
+            {/* Generation Section */}
+            <div className="space-y-3">
+              <DifficultySelector value={difficulty} onChange={setDifficulty} />
+              <CompanySelector value={company} onChange={setCompany} />
+              <ContentSelector value={topic} onChange={setTopic} />
+
+              <Button
+                variant="default"
+                className="w-full h-9 bg-black hover:bg-gray-800 text-white text-sm font-medium rounded-md transition-colors"
+                onClick={handleGenerate}
+                disabled={isGenerating}
+              >
+                {isGenerating ? (
+                  <>
+                    <div className="animate-spin h-3 w-3 border border-white border-t-transparent rounded-full mr-2" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="h-3 w-3 mr-2" />
+                    Generate
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-gray-200" />
+
+            {/* Hints Section */}
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500 font-medium">Get hints</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-8 text-xs font-medium border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 rounded-md transition-colors"
+                  onClick={() => handleHintClick("weak")}
+                  disabled={isHinting}
+                >
+                  {isHinting ? (
+                    <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
+                  ) : (
+                    <>
+                      <Lightbulb className="h-3 w-3 mr-1" />
+                      Weak
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-8 text-xs font-medium border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 rounded-md transition-colors"
+                  onClick={() => handleHintClick("strong")}
+                  disabled={isHinting}
+                >
+                  {isHinting ? (
+                    <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
+                  ) : (
+                    <>
+                      <Lightbulb className="h-3 w-3 mr-1" />
+                      Strong
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
         </PopoverContent>
       </Popover>
@@ -189,7 +214,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
         onOpenChange={setHintDialogOpen}
         title={hintTitle}
         text={hintText}
-      ></HintDialog>
+      />
     </div>
   );
 }
