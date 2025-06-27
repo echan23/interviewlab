@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "framer-motion";
 import CreateRoomButton from "@/components/homepage/CreateRoomButton";
 import Footer from "@/components/homepage/Footer";
 import Features from "@/components/homepage/Features";
@@ -12,25 +11,13 @@ const floating = [
   { src: "/assets/token.svg", x: "40%", y: "-8%", delay: 0.4 },
 ];
 
-const orbs = [
-  { size: 200, x: "15%", y: "25%", delay: 0, intensity: 0.3 },
-  { size: 150, x: "80%", y: "10%", delay: 2, intensity: 0.2 },
-  { size: 180, x: "70%", y: "80%", delay: 4, intensity: 0.25 },
-  { size: 120, x: "10%", y: "70%", delay: 1, intensity: 0.35 },
-  { size: 100, x: "85%", y: "60%", delay: 3, intensity: 0.4 },
-  { size: 160, x: "45%", y: "15%", delay: 5, intensity: 0.3 },
-];
-
 export default function Home() {
   return (
     <div className="relative min-h-screen text-white overflow-hidden flex flex-col bg-black">
-      {/* Lightweight animated gradient - uses transform instead of background changes */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Static base gradients */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-white/4"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_50%)]"></div>
 
-        {/* Simple moving elements using CSS animations */}
         <div className="absolute w-96 h-96 -top-48 -left-48 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
         <div
           className="absolute w-80 h-80 -bottom-40 -right-40 bg-white/4 rounded-full blur-3xl animate-pulse"
@@ -47,7 +34,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.1)_0%,_transparent_70%)]"></div>
       </div>
 
-      {/* Simple floating icons - much lighter animation */}
       <div className="pointer-events-none absolute inset-0 z-0">
         {floating.map(({ src, x, y }, i) => (
           <img
