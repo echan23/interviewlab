@@ -7,7 +7,7 @@ const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
   { src: "/assets/clip.svg", x: "-52%", y: "10%", delay: 1.2 },
   { src: "/assets/chat.svg", x: "46%", y: "-38%", delay: 0.8 },
-  { src: "/assets/doc.svg", x: "50%", y: "50%", delay: 1.6 },
+  // Removed the doc.svg icon
   { src: "/assets/token.svg", x: "40%", y: "-8%", delay: 0.4 },
 ];
 
