@@ -3,6 +3,8 @@ import type { Edit, Init } from "../data/types.ts";
 import type { Params } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+const domainName = import.meta.env.VITE_DOMAIN_NAME as string;
+
 let socket: WebSocket;
 const connect = (
   roomID: string,
@@ -11,7 +13,7 @@ const connect = (
   setUserCount: (count: number) => void,
   navigate: ReturnType<typeof useNavigate>
 ) => {
-  socket = new WebSocket(`ws://localhost:8080/ws/${roomID}`);
+  socket = new WebSocket(`ws://${domainName}/ws/${roomID}`);
   socket.onopen = () => {
     console.log("socket opened successfully");
   };

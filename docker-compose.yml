@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  go-backend:
+    build: ./go-backend
+    ports:
+      - "8081:8080"
+    env_file:
+      - ./go-backend/.env
+
+  python-backend:
+    build: ./python-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./python-backend/.env

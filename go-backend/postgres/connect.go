@@ -7,15 +7,11 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/joho/godotenv"
 )
 
 var DB *pgxpool.Pool
 
 func Init(){
-	if err := godotenv.Load(); err != nil{
-		log.Println("No env variables found")
-	}
 
 	url := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		os.Getenv("PG_USER"),

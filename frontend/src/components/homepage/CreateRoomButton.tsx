@@ -7,6 +7,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { PlusCircleIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+const domainName = import.meta.env.VITE_DOMAIN_NAME as string;
 
 const CreateRoomButton = () => {
   const navigate = useNavigate();
@@ -22,8 +23,10 @@ const CreateRoomButton = () => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/api/room/create",
-        { captchaToken: token }
+        `http://${domainName}/api/room/create`,
+        {
+          captchaToken: token,
+        }
       );
       navigate(`/lab/${data.roomID}`);
     } catch (err) {

@@ -6,6 +6,7 @@ import (
 	"interviewlab-backend/internal/websocket"
 	"interviewlab-backend/postgres"
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ import (
 func main() {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
@@ -54,6 +55,11 @@ func main() {
 		}
 		log.Println("Routing client to Room (main.go)")
 		websocket.MainManager.RouteClients(c, roomID)
+	})
+
+	r.GET("/api/roomsAllTime", func(c *gin.Context){
+		count := redis.GetRoomsCreated(c.Request.Context())
+		c.JSON(200, gin.H{"type": "roomsAlltime", "value": count})
 	})
 
 	//Keep this last in file always

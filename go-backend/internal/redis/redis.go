@@ -135,3 +135,17 @@ func ClientExists(ctx context.Context, roomID string) (bool, error){
 	}
 	return false, fmt.Errorf("Postgres lookup failed for %s, %w", roomID, err)
 }
+
+func UpdateRoomsCreated(ctx context.Context){
+	if _, err := Client.Incr(ctx, "rooms_created").Result(); err != nil{
+		log.Println("Failed to increment room counter")
+	}
+}
+
+func GetRoomsCreated(ctx context.Context) (int){
+	count, err := Client.Get(ctx, "rooms_created").Int()
+	if err != nil{
+		log.Println("Failed to retrieve all time rooms created")
+	}
+	return count
+}

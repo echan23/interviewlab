@@ -2,6 +2,8 @@
 import CreateRoomButton from "@/components/homepage/CreateRoomButton";
 import Footer from "@/components/homepage/Footer";
 import Features from "@/components/homepage/Features";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const floating = [
   { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
@@ -11,7 +13,30 @@ const floating = [
   { src: "/assets/token.svg", x: "40%", y: "-8%", delay: 0.4 },
 ];
 
+const domainName = import.meta.env.VITE_DOMAIN_NAME as string;
+
+async function getRoomsAllTime() {
+  const apiUrl = `http://${domainName}/api/roomsAllTime`;
+  try {
+    const response = await axios.get(apiUrl);
+    return response.data.value;
+  } catch (error) {
+    console.log("Failed to retrieve rooms All Time");
+    return null;
+  }
+}
+
 export default function Home() {
+  const [roomsAllTime, setRoomsAllTime] = useState(999);
+
+  useEffect(() => {
+    getRoomsAllTime().then((value) => {
+      if (value) {
+        setRoomsAllTime(value);
+      }
+    });
+  }, []);
+
   return (
     <div className="relative min-h-screen text-white overflow-hidden flex flex-col bg-black">
       <div className="absolute inset-0 overflow-hidden">
@@ -67,13 +92,11 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium text-white/80">
-              266 labs created
+          <div className="hidden md:flex items-center gap-3 px-5 py-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 shadow-inner">
+            <span className="text-sm font-medium text-white/75 tracking-tight">
+              {roomsAllTime} labs created
             </span>
           </div>
-          <div className="md:hidden text-sm text-white/60">266 labs</div>
         </div>
       </div>
 

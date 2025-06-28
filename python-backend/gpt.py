@@ -15,6 +15,7 @@ load_dotenv()
 api_keys = os.getenv("GPT_API_KEYS", "").split(",")
 if not api_keys:
     raise ValueError("GPT_API_KEYS is missing, empty, or contains empty strings in .env")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 openai_clients = cycle([OpenAI(api_key=key.strip(), base_url="https://models.github.ai/inference") for key in api_keys])
 
@@ -24,7 +25,7 @@ def get_next_client():
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

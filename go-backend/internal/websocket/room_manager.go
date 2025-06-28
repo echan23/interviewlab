@@ -67,5 +67,6 @@ func (m *Manager) HandleGenerateRoomRequest(c *gin.Context){
 	defer m.Unlock()
 	roomID := m.generateRoomID()
 	redis.SaveRoomToRedis(roomID, "")
+	redis.UpdateRoomsCreated(c.Request.Context())
 	c.JSON(200, gin.H{"roomID": roomID})
 }

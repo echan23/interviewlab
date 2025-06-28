@@ -105,8 +105,8 @@ export default function Features() {
             Features
           </motion.h2>
           <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed font-light tracking-wide">
-            Completely free — start coding instantly, share a room link with
-            anyone, and collaborate with no signup required.
+            We built a free version of CoderPad — code instantly, share a link,
+            and collaborate. No signup needed. Free forever.
           </p>
         </motion.div>
 
