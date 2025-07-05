@@ -104,7 +104,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-                  "S3Key": "serverless/gpt-fastapi-backend/dev/1751354058728-2025-07-01T07:14:18.728Z/gpt-fastapi-backend.zip"
+                  "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
                 },
                 "Handler": "main.handler",
                 "Runtime": "python3.9",
@@ -122,14 +122,14 @@
                 "ApiLogGroup"
               ]
             },
-            "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo": {
+            "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "ApiLambdaFunction"
                 },
-                "CodeSha256": "pCslEYEe+2+68YR46R5mkNyGuLGbw9VfX6Ana0eVWo4="
+                "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
               }
             },
             "ApiGatewayRestApi": {
@@ -250,7 +250,7 @@
                 "ApiLambdaPermissionApiGateway"
               ]
             },
-            "ApiGatewayDeployment1751354008577": {
+            "ApiGatewayDeployment1751754192937": {
               "Type": "AWS::ApiGateway::Deployment",
               "Properties": {
                 "RestApiId": {
@@ -311,7 +311,7 @@
             "ApiLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo"
+                "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
               },
               "Export": {
                 "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -382,7 +382,7 @@
           "timeout": 6,
           "runtime": "python3.9",
           "vpc": {},
-          "versionLogicalId": "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo"
+          "versionLogicalId": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
         }
       },
       "plugins": [
@@ -494,7 +494,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-                "S3Key": "serverless/gpt-fastapi-backend/dev/1751354058728-2025-07-01T07:14:18.728Z/gpt-fastapi-backend.zip"
+                "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
               },
               "Handler": "main.handler",
               "Runtime": "python3.9",
@@ -512,14 +512,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo": {
+          "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "pCslEYEe+2+68YR46R5mkNyGuLGbw9VfX6Ana0eVWo4="
+              "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
             }
           },
           "ApiGatewayRestApi": {
@@ -640,7 +640,7 @@
               "ApiLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1751354008577": {
+          "ApiGatewayDeployment1751754192937": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -701,7 +701,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo"
+              "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
             },
             "Export": {
               "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -759,12 +759,12 @@
     "serviceProviderAwsCfStackName": "gpt-fastapi-backend-dev",
     "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:911735988568:stack/gpt-fastapi-backend-dev/07a7aa90-564b-11f0-a455-0afff54d5643",
     "serviceProviderAwsCfStackCreated": "2025-07-01T07:14:30.056Z",
-    "serviceProviderAwsCfStackUpdated": null,
-    "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
+    "serviceProviderAwsCfStackUpdated": "2025-07-05T20:07:48.224Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "ApiLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-1:911735988568:function:gpt-fastapi-backend-dev-api:1",
+        "OutputValue": "arn:aws:lambda:us-east-1:911735988568:function:gpt-fastapi-backend-dev-api:2",
         "Description": "Current Lambda function version",
         "ExportName": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
       },
@@ -873,7 +873,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-              "S3Key": "serverless/gpt-fastapi-backend/dev/1751354058728-2025-07-01T07:14:18.728Z/gpt-fastapi-backend.zip"
+              "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
             },
             "Handler": "main.handler",
             "Runtime": "python3.9",
@@ -891,14 +891,14 @@
             "ApiLogGroup"
           ]
         },
-        "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo": {
+        "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "ApiLambdaFunction"
             },
-            "CodeSha256": "pCslEYEe+2+68YR46R5mkNyGuLGbw9VfX6Ana0eVWo4="
+            "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
           }
         },
         "ApiGatewayRestApi": {
@@ -1019,7 +1019,7 @@
             "ApiLambdaPermissionApiGateway"
           ]
         },
-        "ApiGatewayDeployment1751354008577": {
+        "ApiGatewayDeployment1751754192937": {
           "Type": "AWS::ApiGateway::Deployment",
           "Properties": {
             "RestApiId": {
@@ -1080,7 +1080,7 @@
         "ApiLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "ApiLambdaVersionS0auK0sTaLWnXYiTUaQcghDt3njeq8QZC9zJAV6uZo"
+            "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
           },
           "Export": {
             "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"

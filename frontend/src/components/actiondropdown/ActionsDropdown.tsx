@@ -35,7 +35,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
   async function handleGenerate() {
     setIsGenerating(true);
     try {
-      const res = await fetch(`${PYTHON_API_URL}generate`, {
+      const res = await fetch(`${PYTHON_API_URL}/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ difficulty, company, topic }),
@@ -96,7 +96,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
 
     setIsHinting(true);
     try {
-      const res = await fetch(`${PYTHON_API_URL}hint`, {
+      const res = await fetch(`${PYTHON_API_URL}/hint`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, hintType }),
