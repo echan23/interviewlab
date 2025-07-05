@@ -67,8 +67,18 @@ func main() {
 		c.File("./frontend/dist/index.html")
 	})
 
+
+	r.GET("/healthz", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	  })
+
+
+
 	log.Println("Server starting on port 8080")
+
+	//Last in file
 	r.Run(":8080")
+
 
 	//log.fatal here
 }

@@ -15,7 +15,7 @@ import { useState } from "react";
 import * as monaco from "monaco-editor";
 import HintDialog from "@/components/dialogs/HintDialog";
 
-const domainName = import.meta.env.VITE_PYTHON_DOMAIN_NAME as string;
+const PYTHON_API_URL = import.meta.env.VITE_PYTHON_URL;
 
 type ActionsDropdownProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
@@ -35,7 +35,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
   async function handleGenerate() {
     setIsGenerating(true);
     try {
-      const res = await fetch(`http://${domainName}/api/generate`, {
+      const res = await fetch(`${PYTHON_API_URL}generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ difficulty, company, topic }),
@@ -96,7 +96,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
 
     setIsHinting(true);
     try {
-      const res = await fetch(`http://${domainName}/api/hint`, {
+      const res = await fetch(`${PYTHON_API_URL}hint`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, hintType }),

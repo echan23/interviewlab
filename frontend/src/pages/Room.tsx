@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import CodeEditor from "../components/CodeEditor.tsx";
 import Output from "../components/Output.tsx";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";

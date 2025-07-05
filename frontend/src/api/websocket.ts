@@ -1,6 +1,5 @@
 import * as monaco from "monaco-editor";
 import type { Edit, Init } from "../data/types.ts";
-import type { Params } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const domainName = import.meta.env.VITE_DOMAIN_NAME as string;

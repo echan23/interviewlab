@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Play, Lightbulb, Eye, Headphones } from "lucide-react";
+import { Sparkles, Play, Lightbulb } from "lucide-react";
 import generateImg from "@/assets/GenerateFeatureExample.png";
 import runImg from "@/assets/RunFeatureExample.png";
 import weakHintImg from "@/assets/WeakHintExample.png";

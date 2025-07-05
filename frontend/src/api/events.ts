@@ -1,6 +1,6 @@
 import * as monaco from "monaco-editor";
 import { sendUpdate } from "./websocket";
-import type { Edit, Init } from "../data/types";
+import type { Edit } from "../data/types";
 
 let applyingRemote = false;
 
