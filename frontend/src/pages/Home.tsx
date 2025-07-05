@@ -5,18 +5,10 @@ import Features from "@/components/homepage/Features";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const floating = [
-  { src: "/assets/sticky.svg", x: "-44%", y: "60%", delay: 0 },
-  { src: "/assets/clip.svg", x: "-52%", y: "10%", delay: 1.2 },
-  { src: "/assets/chat.svg", x: "46%", y: "-38%", delay: 0.8 },
-  // Removed the doc.svg icon
-  { src: "/assets/token.svg", x: "40%", y: "-8%", delay: 0.4 },
-];
-
 const domainName = import.meta.env.VITE_DOMAIN_NAME as string;
 
 async function getRoomsAllTime() {
-  const apiUrl = `http://${domainName}/api/roomsAllTime`;
+  const apiUrl = `${domainName}/api/roomsAllTime`;
   try {
     const response = await axios.get(apiUrl);
     return response.data.value;
@@ -28,6 +20,7 @@ async function getRoomsAllTime() {
 
 export default function Home() {
   const [roomsAllTime, setRoomsAllTime] = useState(999);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
     getRoomsAllTime().then((value) => {
@@ -35,6 +28,9 @@ export default function Home() {
         setRoomsAllTime(value);
       }
     });
+
+    const timeout = setTimeout(() => setShowContent(true), 100);
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
@@ -42,7 +38,6 @@ export default function Home() {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-white/4"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_50%)]"></div>
-
         <div className="absolute w-96 h-96 -top-48 -left-48 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
         <div
           className="absolute w-80 h-80 -bottom-40 -right-40 bg-white/4 rounded-full blur-3xl animate-pulse"
@@ -57,23 +52,6 @@ export default function Home() {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.1)_0%,_transparent_70%)]"></div>
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 z-0">
-        {floating.map(({ src, x, y }, i) => (
-          <img
-            key={i}
-            src={src}
-            alt=""
-            className="absolute select-none w-12 h-12 opacity-20 brightness-0 invert animate-pulse"
-            style={{
-              left: x,
-              top: y,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: "3s",
-            }}
-          />
-        ))}
       </div>
 
       <div className="flex justify-between items-center px-6 md:px-12 py-6 z-10 relative backdrop-blur-sm">
@@ -102,17 +80,35 @@ export default function Home() {
 
       <div className="flex-1 z-10 relative flex items-center justify-center px-4">
         <div className="relative flex flex-col gap-8 items-center justify-center text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            <span className="block text-white">Practice smarter.</span>
-            <span className="block text-gray-300">Interview better.</span>
-          </h1>
+          <div
+            className={`text-5xl md:text-7xl font-bold leading-tight transition-all duration-700 ${
+              showContent
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
+            <h1>
+              <span className="block text-white">Practice smarter.</span>
+              <span className="block text-gray-300">Interview better.</span>
+            </h1>
+          </div>
 
-          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed">
-            Compile code, get AI-powered feedback, and collaborate in real time
-            — all in your browser.
+          <p
+            className={`text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed transform transition-all duration-700 ${
+              showContent
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
+            Mock interview with real-time compilation, AI feedback, and live
+            collaboration — all in your browser.
           </p>
 
-          <div className="mt-4">
+          <div
+            className={`mt-4 transform transition-all duration-700 delay-200 ${
+              showContent ? "opacity-100 scale-100" : "opacity-0 scale-90"
+            }`}
+          >
             <CreateRoomButton />
           </div>
 

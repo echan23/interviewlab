@@ -22,12 +22,9 @@ const CreateRoomButton = () => {
     if (!token) return;
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        `http://${domainName}/api/room/create`,
-        {
-          captchaToken: token,
-        }
-      );
+      const { data } = await axios.post(`${domainName}/api/room/create`, {
+        captchaToken: token,
+      });
       navigate(`/lab/${data.roomID}`);
     } catch (err) {
       console.error(err);

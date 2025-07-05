@@ -122,3 +122,9 @@
 .monaco-editor .decorationsOverviewRuler {
   display: none !important;
 }
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}

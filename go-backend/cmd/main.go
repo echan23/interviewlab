@@ -14,6 +14,8 @@ import (
 
 func main() {
 	r := gin.Default()
+
+	log.Println("Frontend url: " , os.Getenv("FRONTEND_URL"))
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
