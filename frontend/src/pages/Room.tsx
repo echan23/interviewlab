@@ -12,22 +12,16 @@ import {
 import connect, { disconnect } from "../api/websocket.ts";
 import type { Edit, Init } from "../data/types.ts";
 import { useParams } from "react-router-dom";
-import { ThemeProvider } from "@/components/ThemeProvider.tsx";
+import { ThemeProvider, useTheme } from "@/components/ThemeProvider.tsx";
 import { useNavigate } from "react-router-dom";
 
-const Room = () => {
+const RoomContent = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-  /*The editor useState is at the top level and we use a prop to pass it to CodeEditor. 
-  This way, CodeEditor can update the editor value without having to pass it as a prop.
-  */
-
-  /*We might have to refactor selectedLanguage, since LanguageSelector is a child of CodeEditor, I had to lift the state twice
-  to get it to the top level so that I could pass the selected language to the Output component, it works but is a little messy
-  */
   const [selectedLanguage, setSelectedLanguage] = useState("python");
   const [userCount, setUserCount] = useState(1);
   const socketRef = useRef<WebSocket | null>(null);
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   //Handle updates to the editor
   const handleReceiveEditorUpdate = (receivedEdits: Edit[]) => {
@@ -80,34 +74,56 @@ const Room = () => {
   }, [roomID, editorMounted]);
 
   return (
-    <ThemeProvider>
-      <div className="app-container h-screen w-screen flex flex-col overflow-hidden">
-        <Header editorRef={editorRef} userCount={userCount} />
+    <div
+      className={`app-container h-screen w-screen flex flex-col overflow-hidden ${
+        theme === "dark" ? "bg-[#1e1e1e]" : "bg-white"
+      }`}
+    >
+      <Header editorRef={editorRef} userCount={userCount} />
 
-        <div className="code-section-container rounded-lg border border-gray-300 m-2 p-2 ml-2 mr-2">
-          <div className="flex-1">
-            <PanelGroup direction="horizontal">
-              <Panel defaultSize={70} minSize={20}>
-                <div className="h-full overflow-auto">
-                  <CodeEditor
-                    editorRef={editorRef}
-                    onSelectedLanguage={(language) =>
-                      setSelectedLanguage(language)
-                    }
-                    setEditorMounted={setEditorMounted}
-                  />
-                </div>
-              </Panel>
-              <PanelResizeHandle className="w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize transition-colors duration-150 ml-1 mr-1" />
-              <Panel defaultSize={30} minSize={20}>
-                <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
-                  <Output language={selectedLanguage} editorRef={editorRef} />
-                </div>
-              </Panel>
-            </PanelGroup>
-          </div>
+      <div
+        className={`code-section-container rounded-lg border m-2 p-2 ml-2 mr-2 transition-colors duration-200 ${
+          theme === "dark"
+            ? "border-[#3c3c3c] bg-[#252526] shadow-xl shadow-black/20"
+            : "border-[#e5e5e5] bg-[#f8f8f8] shadow-lg"
+        }`}
+      >
+        <div className="flex-1">
+          <PanelGroup direction="horizontal">
+            <Panel defaultSize={70} minSize={20}>
+              <div className="h-full overflow-auto">
+                <CodeEditor
+                  editorRef={editorRef}
+                  onSelectedLanguage={(language) =>
+                    setSelectedLanguage(language)
+                  }
+                  setEditorMounted={setEditorMounted}
+                />
+              </div>
+            </Panel>
+            <PanelResizeHandle
+              className={`w-1 cursor-col-resize transition-colors duration-150 ml-1 mr-1 ${
+                theme === "dark"
+                  ? "bg-[#3c3c3c] hover:bg-[#007acc]"
+                  : "bg-[#e5e5e5] hover:bg-[#007acc]"
+              }`}
+            />
+            <Panel defaultSize={30} minSize={20}>
+              <div className="output-container-wrapper h-full overflow-auto flex flex-col justify-end">
+                <Output language={selectedLanguage} editorRef={editorRef} />
+              </div>
+            </Panel>
+          </PanelGroup>
         </div>
       </div>
+    </div>
+  );
+};
+
+const Room = () => {
+  return (
+    <ThemeProvider>
+      <RoomContent />
     </ThemeProvider>
   );
 };

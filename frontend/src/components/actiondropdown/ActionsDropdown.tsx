@@ -14,6 +14,7 @@ import { Sparkles, Wand2, Lightbulb } from "lucide-react";
 import { useState } from "react";
 import * as monaco from "monaco-editor";
 import HintDialog from "@/components/dialogs/HintDialog";
+import { useTheme } from "@/components/ThemeProvider";
 
 const PYTHON_API_URL = import.meta.env.VITE_PYTHON_URL;
 
@@ -31,6 +32,7 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
   const [hintTitle, setHintTitle] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isHinting, setIsHinting] = useState(false);
+  const { theme } = useTheme();
 
   async function handleGenerate() {
     setIsGenerating(true);
@@ -127,15 +129,23 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
           <Button
             size="icon"
             variant="ghost"
-            className="relative h-10 w-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:scale-105 transition-all duration-200 group"
+            className={`relative h-10 w-10 rounded-lg border transition-all duration-200 group hover:scale-110 ${
+              theme === "dark"
+                ? "bg-[#2d2d30] border-[#3c3c3c] hover:bg-[#094771] hover:shadow-lg hover:shadow-[#007acc]/20"
+                : "bg-[#f3f3f3] border-[#e5e5e5] hover:bg-[#e8f4fd] hover:shadow-md hover:shadow-[#007acc]/10"
+            }`}
           >
-            <Sparkles className="h-5 w-5 text-purple-600 group-hover:text-purple-700 transition-colors" />
+            <Sparkles className="h-5 w-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
           align="start"
           sideOffset={8}
-          className="w-72 p-4 border border-gray-200 shadow-lg bg-white rounded-lg"
+          className={`w-72 p-4 border shadow-lg rounded-lg ${
+            theme === "dark"
+              ? "bg-[#252526] border-[#3c3c3c]"
+              : "bg-[#f8f8f8] border-[#e5e5e5]"
+          }`}
         >
           <div className="space-y-4">
             {/* Generation Section */}
@@ -146,13 +156,17 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
 
               <Button
                 variant="default"
-                className="w-full h-9 bg-black hover:bg-gray-800 text-white text-sm font-medium rounded-md transition-colors"
+                className={`w-full h-9 text-sm font-medium rounded-md transition-colors flex items-center justify-center ${
+                  theme === "dark"
+                    ? "bg-[#2d2d30] hover:bg-[#094771] text-[#cccccc] border border-[#3c3c3c] hover:shadow-md hover:shadow-[#007acc]/20"
+                    : "bg-[#f3f3f3] hover:bg-[#e8f4fd] text-[#383a42] border border-[#e5e5e5] hover:shadow-sm hover:shadow-[#007acc]/10"
+                }`}
                 onClick={handleGenerate}
                 disabled={isGenerating}
               >
                 {isGenerating ? (
                   <>
-                    <div className="animate-spin h-3 w-3 border border-white border-t-transparent rounded-full mr-2" />
+                    <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-2" />
                     Generating...
                   </>
                 ) : (
@@ -165,16 +179,30 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
             </div>
 
             {/* Divider */}
-            <div className="border-t border-gray-200" />
+            <div
+              className={`border-t ${
+                theme === "dark" ? "border-[#3c3c3c]" : "border-[#e5e5e5]"
+              }`}
+            />
 
             {/* Hints Section */}
             <div className="space-y-2">
-              <p className="text-xs text-gray-500 font-medium">Get hints</p>
+              <p
+                className={`text-xs font-medium ${
+                  theme === "dark" ? "text-[#cccccc]/70" : "text-[#383a42]/70"
+                }`}
+              >
+                Get hints
+              </p>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 h-8 text-xs font-medium border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 rounded-md transition-colors"
+                  className={`flex-1 h-9 text-sm font-medium rounded-md transition-colors ${
+                    theme === "dark"
+                      ? "border-[#3c3c3c] bg-[#2d2d30] hover:bg-[#094771] hover:shadow-md hover:shadow-[#007acc]/20 text-[#cccccc] hover:text-white"
+                      : "border-[#e5e5e5] bg-[#f3f3f3] hover:bg-[#e8f4fd] hover:shadow-sm hover:shadow-[#007acc]/10 text-[#383a42]"
+                  }`}
                   onClick={() => handleHintClick("weak")}
                   disabled={isHinting}
                 >
@@ -182,15 +210,19 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
                     <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
                   ) : (
                     <>
-                      <Lightbulb className="h-3 w-3 mr-1" />
-                      Weak
+                      <Lightbulb className="h-4 w-4 mr-2" />
+                      Weak Hint
                     </>
                   )}
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 h-8 text-xs font-medium border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 rounded-md transition-colors"
+                  className={`flex-1 h-9 text-sm font-medium rounded-md transition-colors ${
+                    theme === "dark"
+                      ? "border-[#3c3c3c] bg-[#2d2d30] hover:bg-[#094771] hover:shadow-md hover:shadow-[#007acc]/20 text-[#cccccc] hover:text-white"
+                      : "border-[#e5e5e5] bg-[#f3f3f3] hover:bg-[#e8f4fd] hover:shadow-sm hover:shadow-[#007acc]/10 text-[#383a42]"
+                  }`}
                   onClick={() => handleHintClick("strong")}
                   disabled={isHinting}
                 >
@@ -198,8 +230,8 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
                     <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
                   ) : (
                     <>
-                      <Lightbulb className="h-3 w-3 mr-1" />
-                      Strong
+                      <Lightbulb className="h-4 w-4 mr-2" />
+                      Strong Hint
                     </>
                   )}
                 </Button>

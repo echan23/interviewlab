@@ -103,7 +103,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-                "S3Key": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z/gpt-fastapi-backend.zip"
+                "S3Key": "serverless/gpt-fastapi-backend/dev/1751830238586-2025-07-06T19:30:38.586Z/gpt-fastapi-backend.zip"
               },
               "Handler": "main.handler",
               "Runtime": "python3.9",
@@ -121,14 +121,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8": {
+          "ApiLambdaVersiongEMj2otpiRYpqBFiNyzTgUwKei9MxfRTfCSVkYq5V8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "5tX1RHJ2aesbtDv/zY55Htv3Ep+xaj/wvpAQj/AgLB4="
+              "CodeSha256": "Pgpubx9043E9RqVAOr2WjVX4+NacPwcM+Mv94BtCL4o="
             }
           },
           "ApiGatewayRestApi": {
@@ -251,7 +251,7 @@
               "ApiLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1751786119963": {
+          "ApiGatewayDeployment1751830232093": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -312,7 +312,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
+              "Ref": "ApiLambdaVersiongEMj2otpiRYpqBFiNyzTgUwKei9MxfRTfCSVkYq5V8"
             },
             "Export": {
               "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -388,7 +388,7 @@
         "timeout": 6,
         "runtime": "python3.9",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
+        "versionLogicalId": "ApiLambdaVersiongEMj2otpiRYpqBFiNyzTgUwKei9MxfRTfCSVkYq5V8"
       }
     },
     "configValidationMode": "warn",
@@ -414,7 +414,7 @@
     "artifact": "/Users/edchan/projects/interviewlab/python-backend/.serverless/gpt-fastapi-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z",
+    "artifactDirectoryName": "serverless/gpt-fastapi-backend/dev/1751830238586-2025-07-06T19:30:38.586Z",
     "artifact": "gpt-fastapi-backend.zip"
   }
 }

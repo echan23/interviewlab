@@ -27,7 +27,7 @@ const CodeEditor = ({
   };
 
   function getResolvedTheme() {
-    return theme === "dark" ? "vs-dark" : "light";
+    return theme === "dark" ? "vs-dark" : "vs";
   }
 
   function handleEditorDidMount(
@@ -38,34 +38,45 @@ const CodeEditor = ({
     monacoInstance.editor.setTheme(getResolvedTheme());
     setEditorMounted(true);
   }
-  //Useeffect for theme change
+
+  // UseEffect for theme change
   useEffect(() => {
     if (!editorRef.current) return;
     monaco.editor.setTheme(getResolvedTheme());
   }, [theme]);
 
   return (
-    <div className="editor-container h-full w-full">
-      <div className="mb-2 flex justify-between items-center">
+    <div
+      className={`editor-container h-full w-full ${
+        theme === "dark" ? "bg-[#1e1e1e]" : "bg-white"
+      }`}
+    >
+      <div
+        className={`mb-2 flex justify-between items-center ${
+          theme === "dark" ? "bg-[#252526]" : "bg-[#f8f8f8]"
+        }`}
+      >
         <LanguageSelector onSelect={handleSelectLanguage} />
         <div className="flex items-center gap-2">
           <ThemeToggle />
         </div>
       </div>
-      <Editor
-        height="81vh"
-        width="100%"
-        defaultLanguage="python"
-        language={currentLanguage}
-        onMount={handleEditorDidMount}
-        theme={getResolvedTheme()}
-        options={{
-          minimap: { enabled: false },
-          wordWrap: "on",
-          renderLineHighlight: "line",
-          scrollBeyondLastLine: false,
-        }}
-      />
+      <div>
+        <Editor
+          height="81vh"
+          width="100%"
+          defaultLanguage="python"
+          language={currentLanguage}
+          onMount={handleEditorDidMount}
+          theme={getResolvedTheme()}
+          options={{
+            minimap: { enabled: false },
+            wordWrap: "on",
+            renderLineHighlight: "line",
+            scrollBeyondLastLine: false,
+          }}
+        />
+      </div>
     </div>
   );
 };

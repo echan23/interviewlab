@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const domainName = import.meta.env.VITE_WS_URL as string;
 
 let socket: WebSocket;
-let heartbeat: ReturnType<typeof setInterval>;
 const connect = (
   roomID: string,
   onReceiveUpdate: (update: Edit[]) => void, //Callback that handles editor updates from other clients
@@ -16,11 +15,6 @@ const connect = (
   socket = new WebSocket(`${domainName}/ws/${roomID}`);
   socket.onopen = () => {
     console.log("socket opened successfully");
-    heartbeat = setInterval(() => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: "heartbeat" }));
-      }
-    }, 30000);
   };
 
   socket.onmessage = (message) => {
@@ -38,7 +32,6 @@ const connect = (
   };
   socket.onclose = (event) => {
     console.log("Socket connection closing");
-    clearInterval(heartbeat);
     if (event.code === 1006) {
       console.log("Socket closed by server");
       navigate("/", { replace: true });

@@ -60,12 +60,12 @@ const LanguageSelector = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[200px] justify-between transition-all duration-200 hover:shadow-lg hover:border-primary/50 group"
         >
           {value
             ? languageOptions.find((lang) => lang.value === value)?.label
             : "Select language..."}
-          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50 group-hover:opacity-70 group-hover:rotate-180 transition-all duration-200" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -83,6 +83,7 @@ const LanguageSelector = ({
                     onSelect(currentValue);
                     setOpen(false);
                   }}
+                  className="hover:bg-accent/50 hover:translate-x-1 transition-all duration-150 cursor-pointer"
                 >
                   <CheckIcon
                     className={cn(

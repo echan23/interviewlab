@@ -13,8 +13,8 @@ import ActionsDropdown from "./actiondropdown/ActionsDropdown";
 import { RedirectHome } from "./RedirectHome";
 import * as monaco from "monaco-editor";
 import UserCount from "./UserCount";
+import { useTheme } from "@/components/ThemeProvider";
 
-//EditorRef gets drilled two levels from Room.tsx -> Header.tsx -> ActionsDropdown.tsx
 type HeaderProps = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   userCount: number;
@@ -24,6 +24,7 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
   const { roomID } = useParams<{ roomID: string }>();
   const shareURL = `${window.location.origin}/lab/${roomID}`;
   const [copied, setCopied] = useState(false);
+  const { theme } = useTheme();
 
   const handleCopy = async () => {
     try {
@@ -37,9 +38,7 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
 
   return (
     <header className="relative w-full bg-transparent">
-      {/* Main content */}
       <div className="flex items-center justify-between px-4 py-2">
-        {/* Left action buttons */}
         <div className="flex items-center gap-2">
           <div className="relative">
             <RedirectHome />
@@ -50,24 +49,34 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
           </div>
         </div>
 
-        {/* Right components */}
         <div className="flex items-center gap-2">
-          {/* User count with enhanced styling */}
           <div className="relative">
             <UserCount count={userCount} />
-            {/* Live indicator */}
             <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           </div>
 
-          {/* Enhanced Share button */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="secondary"
-                className="relative flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-md shadow-sm hover:shadow-md hover:bg-gray-50 group"
+                className={`relative flex items-center gap-2 px-3 py-1.5 border rounded-md shadow-sm group transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 ${
+                  theme === "dark"
+                    ? "bg-[#2d2d30] border-[#3c3c3c] hover:bg-[#094771] hover:border-[#007acc] hover:shadow-lg hover:shadow-black/20 text-[#cccccc]"
+                    : "bg-[#f3f3f3] border-[#e5e5e5] hover:bg-[#e8f4fd] hover:border-[#007acc] hover:shadow-md text-[#383a42]"
+                }`}
               >
-                <Share2 className="h-3.5 w-3.5 text-gray-600 group-hover:text-gray-800" />
-                <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                <Share2
+                  className={`h-3.5 w-3.5 group-hover:scale-110 transition-all duration-200 ${
+                    theme === "dark"
+                      ? "text-[#cccccc]/70 group-hover:text-[#cccccc]"
+                      : "text-[#383a42]/70 group-hover:text-[#383a42]"
+                  }`}
+                />
+                <span
+                  className={`text-sm font-medium group-hover:tracking-wide transition-all duration-200 ${
+                    theme === "dark" ? "text-[#cccccc]" : "text-[#383a42]"
+                  }`}
+                >
                   {copied ? "Copied!" : "Share"}
                 </span>
               </Button>
@@ -75,9 +84,17 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
 
             <DropdownMenuContent
               align="end"
-              className="w-80 bg-white border border-gray-200 shadow-lg rounded-lg p-1"
+              className={`w-80 border shadow-lg rounded-lg p-1 ${
+                theme === "dark"
+                  ? "bg-[#252526] border-[#3c3c3c]"
+                  : "bg-[#f8f8f8] border-[#e5e5e5]"
+              }`}
             >
-              <DropdownMenuLabel className="pb-3 pt-2 px-3 text-gray-800 font-medium">
+              <DropdownMenuLabel
+                className={`pb-3 pt-2 px-3 font-medium ${
+                  theme === "dark" ? "text-[#cccccc]" : "text-[#383a42]"
+                }`}
+              >
                 Share this lab room
               </DropdownMenuLabel>
 
@@ -86,7 +103,11 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
                   <Input
                     readOnly
                     value={shareURL}
-                    className="text-sm bg-gray-50 border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/40"
+                    className={`text-sm rounded-md focus:ring-2 focus:ring-[#007acc]/20 focus:border-[#007acc]/40 ${
+                      theme === "dark"
+                        ? "bg-[#2d2d30] border-[#3c3c3c] text-[#cccccc]"
+                        : "bg-[#f3f3f3] border-[#e5e5e5] text-[#383a42]"
+                    }`}
                     onFocus={(e) => e.currentTarget.select()}
                   />
                 </div>
@@ -95,22 +116,33 @@ export default function Header({ editorRef, userCount }: HeaderProps) {
                   variant="outline"
                   size="icon"
                   onClick={handleCopy}
-                  className="shrink-0 bg-white hover:bg-gray-50 border-gray-200 rounded-md"
+                  className={`shrink-0 rounded-md transition-all duration-200 ${
+                    theme === "dark"
+                      ? "bg-[#2d2d30] hover:bg-[#094771] border-[#3c3c3c] hover:border-[#007acc]"
+                      : "bg-[#f3f3f3] hover:bg-[#e8f4fd] border-[#e5e5e5] hover:border-[#007acc]"
+                  }`}
                 >
                   <Copy
                     size={16}
                     className={
                       copied
-                        ? "text-green-600"
-                        : "text-gray-600 hover:text-gray-800"
+                        ? "text-green-500"
+                        : theme === "dark"
+                        ? "text-[#cccccc]/70 hover:text-[#cccccc]"
+                        : "text-[#383a42]/70 hover:text-[#383a42]"
                     }
                   />
                 </Button>
               </div>
 
-              {/* Additional info */}
               <div className="px-3 pb-2">
-                <p className="text-xs text-gray-500 bg-gray-50 rounded-md px-3 py-2">
+                <p
+                  className={`text-xs rounded-md px-3 py-2 ${
+                    theme === "dark"
+                      ? "text-[#cccccc]/70 bg-[#2d2d30]"
+                      : "text-[#383a42]/70 bg-[#f3f3f3]"
+                  }`}
+                >
                   Anyone with this link can join your interview room
                 </p>
               </div>
