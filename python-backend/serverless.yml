@@ -12,7 +12,12 @@ functions:
       - http:
           path: /{proxy+}
           method: ANY
-          cors: true
+          cors:
+            origin: "https://www.interviewlab.dev"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
 plugins:
   - serverless-python-requirements

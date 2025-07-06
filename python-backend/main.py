@@ -133,8 +133,8 @@ async def hint_handler(req: HintRequest):
         hint = await get_gpt_response(req.code, req.hintType)
         return {"hint": hint}
     except Exception as e:
-        logging.error("Hint generation failed", exc_info=True)
-        return {"error": "Failed to generate hint"}
+        logging.error(f"Generation failed: {e}", exc_info=True)
+        return {"error": str(e)}
     
 @app.post("/api/generate")
 async def generate_handler(req: QuestionRequest):
@@ -143,6 +143,6 @@ async def generate_handler(req: QuestionRequest):
         question = await generate_question(req.difficulty, req.company, req.topic)
         return {"question": question}
     except Exception as e:
-        logging.error("Question gneration failed", exc_info=True)
-        return {"error": "Failed to generate question"}
+        logging.error(f"Generation failed: {e}", exc_info=True)
+        return {"error": str(e)}
 

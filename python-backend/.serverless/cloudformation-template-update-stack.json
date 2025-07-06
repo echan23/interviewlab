@@ -91,7 +91,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-          "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
+          "S3Key": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z/gpt-fastapi-backend.zip"
         },
         "Handler": "main.handler",
         "Runtime": "python3.9",
@@ -109,14 +109,14 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
+    "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
+        "CodeSha256": "5tX1RHJ2aesbtDv/zY55Htv3Ep+xaj/wvpAQj/AgLB4="
       }
     },
     "ApiGatewayRestApi": {
@@ -157,7 +157,8 @@
             "ResponseParameters": {
               "method.response.header.Access-Control-Allow-Origin": true,
               "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
             },
             "ResponseModels": {}
           }
@@ -173,9 +174,10 @@
             {
               "StatusCode": "200",
               "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                "method.response.header.Access-Control-Allow-Origin": "'https://www.interviewlab.dev'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Credentials": "'true'"
               },
               "ResponseTemplates": {
                 "application/json": ""
@@ -237,7 +239,7 @@
         "ApiLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1751754192937": {
+    "ApiGatewayDeployment1751786119963": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -298,7 +300,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
+        "Ref": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
       },
       "Export": {
         "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"

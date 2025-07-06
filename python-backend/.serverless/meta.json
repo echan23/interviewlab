@@ -104,7 +104,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-                  "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
+                  "S3Key": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z/gpt-fastapi-backend.zip"
                 },
                 "Handler": "main.handler",
                 "Runtime": "python3.9",
@@ -122,14 +122,14 @@
                 "ApiLogGroup"
               ]
             },
-            "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
+            "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "ApiLambdaFunction"
                 },
-                "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
+                "CodeSha256": "5tX1RHJ2aesbtDv/zY55Htv3Ep+xaj/wvpAQj/AgLB4="
               }
             },
             "ApiGatewayRestApi": {
@@ -170,7 +170,8 @@
                     "ResponseParameters": {
                       "method.response.header.Access-Control-Allow-Origin": true,
                       "method.response.header.Access-Control-Allow-Headers": true,
-                      "method.response.header.Access-Control-Allow-Methods": true
+                      "method.response.header.Access-Control-Allow-Methods": true,
+                      "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                     },
                     "ResponseModels": {}
                   }
@@ -186,9 +187,10 @@
                     {
                       "StatusCode": "200",
                       "ResponseParameters": {
-                        "method.response.header.Access-Control-Allow-Origin": "'*'",
-                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                        "method.response.header.Access-Control-Allow-Origin": "'https://www.interviewlab.dev'",
+                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
+                        "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                       },
                       "ResponseTemplates": {
                         "application/json": ""
@@ -250,7 +252,7 @@
                 "ApiLambdaPermissionApiGateway"
               ]
             },
-            "ApiGatewayDeployment1751754192937": {
+            "ApiGatewayDeployment1751786119963": {
               "Type": "AWS::ApiGateway::Deployment",
               "Properties": {
                 "RestApiId": {
@@ -311,7 +313,7 @@
             "ApiLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
+                "Ref": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
               },
               "Export": {
                 "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -356,19 +358,14 @@
                 "path": "{proxy+}",
                 "method": "any",
                 "cors": {
-                  "origin": "*",
+                  "origin": "https://www.interviewlab.dev",
                   "methods": [
                     "OPTIONS",
                     "ANY"
                   ],
                   "headers": [
                     "Content-Type",
-                    "X-Amz-Date",
-                    "Authorization",
-                    "X-Api-Key",
-                    "X-Amz-Security-Token",
-                    "X-Amz-User-Agent",
-                    "X-Amzn-Trace-Id"
+                    "Authorization"
                   ],
                   "allowCredentials": "<REDACTED>"
                 },
@@ -382,7 +379,7 @@
           "timeout": 6,
           "runtime": "python3.9",
           "vpc": {},
-          "versionLogicalId": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
+          "versionLogicalId": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
         }
       },
       "plugins": [
@@ -494,7 +491,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-                "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
+                "S3Key": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z/gpt-fastapi-backend.zip"
               },
               "Handler": "main.handler",
               "Runtime": "python3.9",
@@ -512,14 +509,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
+          "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
+              "CodeSha256": "5tX1RHJ2aesbtDv/zY55Htv3Ep+xaj/wvpAQj/AgLB4="
             }
           },
           "ApiGatewayRestApi": {
@@ -560,7 +557,8 @@
                   "ResponseParameters": {
                     "method.response.header.Access-Control-Allow-Origin": true,
                     "method.response.header.Access-Control-Allow-Headers": true,
-                    "method.response.header.Access-Control-Allow-Methods": true
+                    "method.response.header.Access-Control-Allow-Methods": true,
+                    "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                   },
                   "ResponseModels": {}
                 }
@@ -576,9 +574,10 @@
                   {
                     "StatusCode": "200",
                     "ResponseParameters": {
-                      "method.response.header.Access-Control-Allow-Origin": "'*'",
-                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                      "method.response.header.Access-Control-Allow-Origin": "'https://www.interviewlab.dev'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
+                      "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                     },
                     "ResponseTemplates": {
                       "application/json": ""
@@ -640,7 +639,7 @@
               "ApiLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1751754192937": {
+          "ApiGatewayDeployment1751786119963": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -701,7 +700,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
+              "Ref": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
             },
             "Export": {
               "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
@@ -746,7 +745,7 @@
       "serviceProvider": null,
       "instanceParameters": null
     },
-    "serviceRawFile": "service: gpt-fastapi-backend\n\nprovider:\n  name: aws\n  runtime: python3.9\n  region: us-east-1\n\nfunctions:\n  api:\n    handler: main.handler\n    events:\n      - http:\n          path: /{proxy+}\n          method: ANY\n          cors: true\n\nplugins:\n  - serverless-python-requirements\n\ncustom:\n  pythonRequirements:\n    dockerizePip: true\n    slim: true\n",
+    "serviceRawFile": "service: gpt-fastapi-backend\n\nprovider:\n  name: aws\n  runtime: python3.9\n  region: us-east-1\n\nfunctions:\n  api:\n    handler: main.handler\n    events:\n      - http:\n          path: /{proxy+}\n          method: ANY\n          cors:\n            origin: \"https://www.interviewlab.dev\"\n            headers:\n              - Content-Type\n              - Authorization\n            allowCredentials: true\n\nplugins:\n  - serverless-python-requirements\n\ncustom:\n  pythonRequirements:\n    dockerizePip: true\n    slim: true\n",
     "command": [
       "deploy"
     ],
@@ -757,20 +756,20 @@
     "userName": "edwardchan",
     "serviceProviderAwsAccountId": "911735988568",
     "serviceProviderAwsCfStackName": "gpt-fastapi-backend-dev",
-    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:911735988568:stack/gpt-fastapi-backend-dev/07a7aa90-564b-11f0-a455-0afff54d5643",
-    "serviceProviderAwsCfStackCreated": "2025-07-01T07:14:30.056Z",
-    "serviceProviderAwsCfStackUpdated": "2025-07-05T20:07:48.224Z",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:911735988568:stack/gpt-fastapi-backend-dev/0bd847b0-5a37-11f0-b6ad-12e3210ef7f1",
+    "serviceProviderAwsCfStackCreated": "2025-07-06T07:01:31.805Z",
+    "serviceProviderAwsCfStackUpdated": "2025-07-06T07:11:00.894Z",
     "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "ApiLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-1:911735988568:function:gpt-fastapi-backend-dev-api:2",
+        "OutputValue": "arn:aws:lambda:us-east-1:911735988568:function:gpt-fastapi-backend-dev-api:5",
         "Description": "Current Lambda function version",
         "ExportName": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "ServiceEndpoint",
-        "OutputValue": "https://wsvzalog08.execute-api.us-east-1.amazonaws.com/dev",
+        "OutputValue": "https://6rifmuqubl.execute-api.us-east-1.amazonaws.com/dev",
         "Description": "URL of the service endpoint",
         "ExportName": "sls-gpt-fastapi-backend-dev-ServiceEndpoint"
       },
@@ -873,7 +872,7 @@
           "Properties": {
             "Code": {
               "S3Bucket": "serverless-framework-deployments-us-east-1-af6c7e9c-9dfa",
-              "S3Key": "serverless/gpt-fastapi-backend/dev/1751754200721-2025-07-05T22:23:20.721Z/gpt-fastapi-backend.zip"
+              "S3Key": "serverless/gpt-fastapi-backend/dev/1751786127460-2025-07-06T07:15:27.460Z/gpt-fastapi-backend.zip"
             },
             "Handler": "main.handler",
             "Runtime": "python3.9",
@@ -891,14 +890,14 @@
             "ApiLogGroup"
           ]
         },
-        "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs": {
+        "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8": {
           "Type": "AWS::Lambda::Version",
           "DeletionPolicy": "Retain",
           "Properties": {
             "FunctionName": {
               "Ref": "ApiLambdaFunction"
             },
-            "CodeSha256": "XUyP61vLOfKmH4f2h5kvUWfZu4Gy8AQhYCOO9j9K+qU="
+            "CodeSha256": "5tX1RHJ2aesbtDv/zY55Htv3Ep+xaj/wvpAQj/AgLB4="
           }
         },
         "ApiGatewayRestApi": {
@@ -939,7 +938,8 @@
                 "ResponseParameters": {
                   "method.response.header.Access-Control-Allow-Origin": true,
                   "method.response.header.Access-Control-Allow-Headers": true,
-                  "method.response.header.Access-Control-Allow-Methods": true
+                  "method.response.header.Access-Control-Allow-Methods": true,
+                  "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                 },
                 "ResponseModels": {}
               }
@@ -955,9 +955,10 @@
                 {
                   "StatusCode": "200",
                   "ResponseParameters": {
-                    "method.response.header.Access-Control-Allow-Origin": "'*'",
-                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                    "method.response.header.Access-Control-Allow-Origin": "'https://www.interviewlab.dev'",
+                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
+                    "method.response.header.Access-Control-Allow-Credentials": "<REDACTED>"
                   },
                   "ResponseTemplates": {
                     "application/json": ""
@@ -1019,7 +1020,7 @@
             "ApiLambdaPermissionApiGateway"
           ]
         },
-        "ApiGatewayDeployment1751754192937": {
+        "ApiGatewayDeployment1751786119963": {
           "Type": "AWS::ApiGateway::Deployment",
           "Properties": {
             "RestApiId": {
@@ -1080,7 +1081,7 @@
         "ApiLambdaFunctionQualifiedArn": {
           "Description": "Current Lambda function version",
           "Value": {
-            "Ref": "ApiLambdaVersioncFi3QRO9lnM3ShIqEQ7ixKC0OQ7rxaqNMLkyZN8vzs"
+            "Ref": "ApiLambdaVersion2ABpFeZqvoZEtYEHYp8wSSbN2VpkQ4n1ciWccKfii8"
           },
           "Export": {
             "Name": "sls-gpt-fastapi-backend-dev-ApiLambdaFunctionQualifiedArn"
