@@ -129,13 +129,27 @@ export default function ActionsDropdown({ editorRef }: ActionsDropdownProps) {
           <Button
             size="icon"
             variant="ghost"
-            className={`relative h-10 w-10 rounded-lg border transition-all duration-200 group hover:scale-110 ${
+            className={`relative h-10 w-10 rounded-lg border transition-all duration-200 group hover:scale-105 ${
               theme === "dark"
-                ? "bg-[#2d2d30] border-[#3c3c3c] hover:bg-[#094771] hover:shadow-lg hover:shadow-[#007acc]/20"
-                : "bg-[#f3f3f3] border-[#e5e5e5] hover:bg-[#e8f4fd] hover:shadow-md hover:shadow-[#007acc]/10"
+                ? `bg-[#2d2d30] border-[#3c3c3c] ${
+                    open
+                      ? "bg-[#094771] shadow-lg shadow-[#007acc]/20 scale-105"
+                      : "hover:bg-[#094771] hover:shadow-lg hover:shadow-[#007acc]/20"
+                  }`
+                : `bg-[#f3f3f3] border-[#e5e5e5] ${
+                    open
+                      ? "bg-[#e8f4fd] shadow-md shadow-[#007acc]/10 scale-105"
+                      : "hover:bg-[#e8f4fd] hover:shadow-md hover:shadow-[#007acc]/10"
+                  }`
             }`}
           >
-            <Sparkles className="h-5 w-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+            <Sparkles
+              className={`h-5 w-5 text-purple-400 transition-all duration-200 ${
+                open
+                  ? "scale-125 text-purple-300"
+                  : "group-hover:scale-125 group-hover:text-purple-300"
+              }`}
+            />
           </Button>
         </PopoverTrigger>
         <PopoverContent
