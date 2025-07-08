@@ -91,7 +91,7 @@ const RoomContent = () => {
         <div className="flex-1">
           <PanelGroup direction="horizontal">
             <Panel defaultSize={70} minSize={20}>
-              <div className="h-full overflow-auto ">
+              <div className="flex h-full overflow-auto ">
                 <CodeEditor
                   editorRef={editorRef}
                   onSelectedLanguage={(language) =>
