@@ -82,7 +82,7 @@ const RoomContent = () => {
       <Header editorRef={editorRef} userCount={userCount} />
 
       <div
-        className={`code-section-container rounded-lg border m-2 p-2 ml-2 mr-2 transition-colors duration-200 ${
+        className={`code-section-container rounded-lg border p-2 ml-2 mr-2 transition-colors duration-200 ${
           theme === "dark"
             ? "border-[#3c3c3c] bg-[#252526] shadow-xl shadow-black/20"
             : "border-[#e5e5e5] bg-[#f8f8f8] shadow-lg"

@@ -79,6 +79,9 @@ async def get_gpt_response(code: str, hint_type: str) -> str:
         except RateLimitError:
             logging.warning("Rate limit hit. Trying next API key...")
             time.sleep(0.5)  # small delay before retry
+        except Exception as e:
+            logging.error(f"[{i}] Unexpected error with API key: {e}", exc_info=True)
+            time.sleep(0.5)
 
     raise RuntimeError("All API keys exhausted or rate-limited.")
 
