@@ -63,7 +63,6 @@ const CodeEditor = ({
       </div>
       <div>
         <Editor
-          height="clamp(550px, 82vh, 850px)"
           width="100%"
           defaultLanguage="python"
           language={currentLanguage}
