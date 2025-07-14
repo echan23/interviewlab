@@ -1,9 +1,9 @@
-#InterviewLab
+# InterviewLab
 Check out the live site: InterviewLab.dev
 
 InterviewLab is a real-time, collaborative coding interview platform designed for practicing technical interviews with AI-driven assistance, in-browser code execution, and persistent code sessions.
 
-🚀 Features
+## 🚀 Features
 ⚡ Real-Time Collaboration
 Multi-user code editing with live synchronization powered by Go, WebSockets, and Redis Pub/Sub.
 
