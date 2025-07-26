@@ -8,11 +8,6 @@ import {
   SiRedis,
   SiPostgresql,
 } from "react-icons/si";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
 
 const techStack = [
   { name: "Go", Icon: SiGo },
@@ -52,54 +47,9 @@ export default function Footer() {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-8" />
 
           <div className="text-center">
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <p className="text-sm text-gray-400 cursor-pointer hover:text-white transition-colors duration-300 font-light tracking-wide">
-                  © {new Date().getFullYear()} InterviewLab • Connect with us on
-                  LinkedIn
-                </p>
-              </HoverCardTrigger>
-              <HoverCardContent className="bg-black/80 backdrop-blur-md border border-white/20 shadow-xl">
-                <div className="p-2">
-                  <h4 className="text-sm font-semibold text-white mb-3 tracking-wide">
-                    Our team
-                  </h4>
-                  <div className="flex flex-col gap-2">
-                    {[
-                      {
-                        name: "Edward Chan",
-                        url: "https://www.linkedin.com/in/edchan23/",
-                      },
-                      {
-                        name: "Ben Li",
-                        url: "https://www.linkedin.com/in/benjaminliumd/",
-                      },
-                      {
-                        name: "Chris Nam",
-                        url: "https://www.linkedin.com/in/chrisnam28/",
-                      },
-                      {
-                        name: "Hao Jiang",
-                        url: "https://www.linkedin.com/in/haojiang418/",
-                      },
-                    ].map((member) => (
-                      <a
-                        key={member.name}
-                        href={member.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-200"
-                      >
-                        <div className="w-2 h-2 bg-white/40 rounded-full group-hover:bg-white transition-colors duration-200" />
-                        <span className="text-sm text-gray-300 group-hover:text-white transition-colors duration-200 font-light">
-                          {member.name}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+            <p className="text-sm text-gray-400 font-light tracking-wide">
+              © {new Date().getFullYear()} InterviewLab
+            </p>
           </div>
         </div>
       </div>
