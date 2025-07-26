@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-// swap in your preferred icon pack
 import { PlusCircleIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
@@ -44,24 +43,20 @@ const CreateRoomButton = () => {
           border-2 border-black
           rounded-lg shadow-sm
           transition-all duration-200
-          hover:bg-black hover:text-white
+          hover:bg-black hover:text-white hover:-translate-y-1 hover:shadow-lg hover:border-gray-300
           group
           disabled:opacity-50 disabled:cursor-not-allowed
         `}
       >
-        {/* new plus icon */}
         <PlusCircleIcon className="h-6 w-6" />
 
-        {/* label */}
         <span className="font-semibold text-lg">
           {loading ? "Creating…" : "Create Lab"}
         </span>
 
-        {/* arrow slides on hover */}
         <ArrowRightIcon className="h-5 w-5 transform transition-transform group-hover:translate-x-1" />
       </Button>
 
-      {/* still the standard checkbox reCAPTCHA */}
       <div className="h-[88px] w-full flex justify-center">
         <div style={{ visibility: captchaVisible ? "visible" : "hidden" }}>
           <ReCAPTCHA sitekey={siteKey} onChange={handleCaptchaChange} />
