@@ -8,6 +8,8 @@ The code editor that powers the platform is written in TypeScript and uses Webso
 
 One problem I ran into was that users joining an active room wouldn’t see the latest version of the code if someone was still typing. To fix this, I started hashing and saving the full room content in Redis every two seconds. When a new user joins, the server checks Redis and sends them the most recent snapshot before resuming live updates. This small change made synchronization much more reliable and eliminated most of the “stale view” issues I was seeing before.
 
+The backend is on AWS ECS
+
 # Extra Features
 To make the editor feel like a real coding environment, I added a code execution feature powered by Piston API. I also integrated an AI assistant using a FastAPI service hosted on AWS Lambda. It connects to the OpenAI API to generate hints, feedback, and even new problem statements on demand.
 
